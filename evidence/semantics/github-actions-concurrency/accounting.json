@@ -1,0 +1,29 @@
+{
+  "commit": "56fcfa816f27bca239e5d39fff0d4f74f77ec995",
+  "files": 4,
+  "occurrences": 17,
+  "policy_adopted": false,
+  "propositions": 17,
+  "propositions_preserved_without_model_rule": 2,
+  "propositions_with_model_rule": 15,
+  "repository": "github/docs",
+  "review_status": "PROPOSED",
+  "rules_supported": [
+    "K1",
+    "K10",
+    "K11",
+    "K12",
+    "K13",
+    "K2",
+    "K3",
+    "K4",
+    "K5",
+    "K6",
+    "K7",
+    "K8",
+    "K9"
+  ],
+  "schema": "ges.concurrency-semantics-accounting.v1",
+  "scope": "Selected GitHub Actions `concurrency` passages only; not a review of the GitHub Docs corpus.",
+  "semantic_truth_certified": false
+}

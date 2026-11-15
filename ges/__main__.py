@@ -19,6 +19,8 @@ def main(argv=None):
     configure_receipts(sub)
     from .token_semantics import configure_parser as configure_token_semantics
     configure_token_semantics(sub)
+    from .concurrency_semantics import configure_parser as configure_concurrency_semantics
+    configure_concurrency_semantics(sub)
     c=sub.add_parser('branch-checks', help='Read-only exact-revision required-check observation; no enforcement certification')
     c.add_argument('--snapshot',type=Path,required=True); c.add_argument('--profile',type=Path,required=True)
     c.add_argument('--revision',required=True); c.add_argument('--revision-kind',choices=['head','test_merge','merge_group'],required=True)
@@ -51,6 +53,9 @@ def main(argv=None):
     if args.command == 'token-semantics':
         from .token_semantics import run as run_token_semantics
         return run_token_semantics(args)
+    if args.command == 'concurrency-semantics':
+        from .concurrency_semantics import run as run_concurrency_semantics
+        return run_concurrency_semantics(args)
     if args.command == 'receipt':
         from .receipts import run as run_receipt
         return run_receipt(args)

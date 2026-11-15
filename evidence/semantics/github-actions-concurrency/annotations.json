@@ -1,0 +1,794 @@
+{
+ "commit": "56fcfa816f27bca239e5d39fff0d4f74f77ec995",
+ "entries": [
+  {
+   "conditions": [],
+   "content_sha256": "eb3d145ca3d0574eceea930f30041cf448f830b7d34f2a2726b1a72bf6c0fc78",
+   "end_line": 13,
+   "expect": "allows multiple jobs within the same workflow",
+   "heading_ancestry": [
+    "Concurrency"
+   ],
+   "include_chain": [],
+   "path": "content/actions/concepts/workflows-and-actions/concurrency.md",
+   "propositions": [
+    {
+     "ambiguities": [],
+     "formalization": "DESCRIPTIVE: without a concurrency key, forall runs and jobs r1 != r2 of the same workflow, repository or owner account, r1 and r2 may run at the same time, including identical instances of one workflow.",
+     "preserved_differences": [],
+     "rules": [
+      "K9"
+     ],
+     "semantic_ast": {
+      "action": "allow",
+      "consequences": [],
+      "exceptions": [],
+      "modality": "DESCRIPTIVE",
+      "object": "multiple jobs, workflow runs and owner-wide workflow runs, including instances of one workflow, to run concurrently by default",
+      "parameters": [],
+      "polarity": "POSITIVE",
+      "preconditions": [],
+      "qualifiers": [],
+      "scope": [
+       "github/docs",
+       "content/actions/concepts/workflows-and-actions/concurrency.md"
+      ],
+      "subject": "GitHub Actions"
+     }
+    }
+   ],
+   "semantic_kind": "FACT",
+   "start_line": 13,
+   "versions": []
+  },
+  {
+   "conditions": [
+    "ifversion actions-nga"
+   ],
+   "content_sha256": "eb3d145ca3d0574eceea930f30041cf448f830b7d34f2a2726b1a72bf6c0fc78",
+   "end_line": 19,
+   "expect": "only one run can be pending in a concurrency group",
+   "heading_ancestry": [
+    "Concurrency"
+   ],
+   "include_chain": [],
+   "path": "content/actions/concepts/workflows-and-actions/concurrency.md",
+   "propositions": [
+    {
+     "ambiguities": [],
+     "formalization": "DESCRIPTIVE: when concurrency is limited, pending(group) <= 1 by default and a further pending run cancels the previous one; queuing is an opt-in that allows several waiting runs in order.",
+     "preserved_differences": [],
+     "rules": [
+      "K4",
+      "K13"
+     ],
+     "semantic_ast": {
+      "action": "limit",
+      "consequences": [],
+      "exceptions": [
+       "queuing, an opt-in, lets several runs wait and execute in order"
+      ],
+      "modality": "DESCRIPTIVE",
+      "object": "a concurrency group to one pending run by default, replacing the earlier pending run",
+      "parameters": [],
+      "polarity": "POSITIVE",
+      "preconditions": [
+       "concurrency is limited"
+      ],
+      "qualifiers": [],
+      "scope": [
+       "github/docs",
+       "content/actions/concepts/workflows-and-actions/concurrency.md"
+      ],
+      "subject": "GitHub Actions"
+     }
+    }
+   ],
+   "semantic_kind": "FACT",
+   "start_line": 19,
+   "versions": []
+  },
+  {
+   "conditions": [],
+   "content_sha256": "8d28add4a7155b13171bd893bf5de08c17ee9a2a1d4da0a31a3a99fe934c6de9",
+   "end_line": 1,
+   "expect": "A concurrency group can be any string or expression",
+   "heading_ancestry": [
+    "`concurrency`"
+   ],
+   "include_chain": [
+    "content/actions/reference/workflows-and-actions/workflow-syntax.md"
+   ],
+   "path": "data/reusables/actions/jobs/section-using-concurrency.md",
+   "propositions": [
+    {
+     "ambiguities": [],
+     "formalization": "DEFINITION: a workflow-level group is any string or expression whose contexts are within {github, inputs, vars}.",
+     "preserved_differences": [],
+     "rules": [
+      "K10"
+     ],
+     "semantic_ast": {
+      "action": "be",
+      "consequences": [],
+      "exceptions": [],
+      "modality": "DESCRIPTIVE",
+      "object": "any string or expression using only the github, inputs and vars contexts",
+      "parameters": [],
+      "polarity": "POSITIVE",
+      "preconditions": [],
+      "qualifiers": [],
+      "scope": [
+       "github/docs",
+       "data/reusables/actions/jobs/section-using-concurrency.md"
+      ],
+      "subject": "a workflow-level concurrency group"
+     }
+    }
+   ],
+   "semantic_kind": "DEFINITION",
+   "start_line": 1,
+   "versions": []
+  },
+  {
+   "conditions": [],
+   "content_sha256": "bd8dd9d97f3b8ba6ad2ff2d4b4531c717c5a80733094eeb6b644cdc501322130",
+   "end_line": 1,
+   "expect": "A concurrency group can be any string or expression",
+   "heading_ancestry": [
+    "`jobs.<job_id>.concurrency`"
+   ],
+   "include_chain": [
+    "content/actions/reference/workflows-and-actions/workflow-syntax.md"
+   ],
+   "path": "data/reusables/actions/jobs/section-using-concurrency-jobs.md",
+   "propositions": [
+    {
+     "ambiguities": [],
+     "formalization": "DEFINITION: a job-level group is any string or expression whose contexts are within {github, inputs, vars, needs, strategy, matrix}.",
+     "preserved_differences": [],
+     "rules": [
+      "K10"
+     ],
+     "semantic_ast": {
+      "action": "be",
+      "consequences": [],
+      "exceptions": [],
+      "modality": "DESCRIPTIVE",
+      "object": "any string or expression using only the github, inputs, vars, needs, strategy and matrix contexts",
+      "parameters": [],
+      "polarity": "POSITIVE",
+      "preconditions": [],
+      "qualifiers": [],
+      "scope": [
+       "github/docs",
+       "data/reusables/actions/jobs/section-using-concurrency-jobs.md"
+      ],
+      "subject": "a job-level concurrency group"
+     }
+    }
+   ],
+   "semantic_kind": "DEFINITION",
+   "start_line": 1,
+   "versions": []
+  },
+  {
+   "conditions": [
+    "ifversion actions-nga"
+   ],
+   "content_sha256": "3b099dc5cc26dfc0fe2dcf88afd9ad70f10957911bd2fbc6ba2815e8417642e9",
+   "end_line": 3,
+   "expect": "at most one running job or workflow in a concurrency group at any time",
+   "heading_ancestry": [
+    "Using concurrency in different scenarios"
+   ],
+   "include_chain": [
+    "data/reusables/actions/jobs/section-using-concurrency.md",
+    "data/reusables/actions/jobs/section-using-concurrency-jobs.md"
+   ],
+   "path": "data/reusables/actions/actions-group-concurrency.md",
+   "propositions": [
+    {
+     "ambiguities": [],
+     "formalization": "CONSTRAINT: forall group g, |running(g)| <= 1; a run queued while running(g) is non-empty (same repository) is pending; by default the earlier pending run is canceled and the new run takes its place.",
+     "preserved_differences": [],
+     "rules": [
+      "K2",
+      "K3",
+      "K4",
+      "K11"
+     ],
+     "semantic_ast": {
+      "action": "limit",
+      "consequences": [
+       "the earlier pending run is canceled and the new queued run takes its place"
+      ],
+      "exceptions": [],
+      "modality": "DESCRIPTIVE",
+      "object": "a concurrency group to one running job or workflow, holding a newly queued run as pending and replacing any earlier pending run by default",
+      "parameters": [],
+      "polarity": "POSITIVE",
+      "preconditions": [
+       "another job or workflow in the same group in the repository is in progress"
+      ],
+      "qualifiers": [],
+      "scope": [
+       "github/docs",
+       "data/reusables/actions/actions-group-concurrency.md"
+      ],
+      "subject": "GitHub Actions"
+     }
+    }
+   ],
+   "semantic_kind": "CONSTRAINT",
+   "start_line": 3,
+   "versions": []
+  },
+  {
+   "conditions": [
+    "ifversion not actions-nga"
+   ],
+   "content_sha256": "3b099dc5cc26dfc0fe2dcf88afd9ad70f10957911bd2fbc6ba2815e8417642e9",
+   "end_line": 7,
+   "expect": "at most one running and one pending job in a concurrency group",
+   "heading_ancestry": [
+    "Using concurrency in different scenarios"
+   ],
+   "include_chain": [
+    "data/reusables/actions/jobs/section-using-concurrency.md",
+    "data/reusables/actions/jobs/section-using-concurrency-jobs.md"
+   ],
+   "path": "data/reusables/actions/actions-group-concurrency.md",
+   "propositions": [
+    {
+     "ambiguities": [],
+     "formalization": "CONSTRAINT: forall group g, |running(g)| <= 1 and |pending(g)| <= 1; a run queued while running(g) is non-empty (same repository) is pending and replaces any earlier pending run, which is canceled.",
+     "preserved_differences": [
+      "Where actions-nga does not apply the text states one running and one pending explicitly; with the flag it states one running and one pending by default, so the two wordings agree on the default behaviour."
+     ],
+     "rules": [
+      "K2",
+      "K3",
+      "K4",
+      "K11"
+     ],
+     "semantic_ast": {
+      "action": "limit",
+      "consequences": [
+       "the earlier pending run is canceled and the new queued run takes its place"
+      ],
+      "exceptions": [],
+      "modality": "DESCRIPTIVE",
+      "object": "a concurrency group to one running and one pending job or workflow, replacing the earlier pending run",
+      "parameters": [],
+      "polarity": "POSITIVE",
+      "preconditions": [
+       "another job or workflow in the same group in the repository is in progress"
+      ],
+      "qualifiers": [
+       "where actions-nga does not apply"
+      ],
+      "scope": [
+       "github/docs",
+       "data/reusables/actions/actions-group-concurrency.md"
+      ],
+      "subject": "GitHub Actions"
+     }
+    }
+   ],
+   "semantic_kind": "CONSTRAINT",
+   "start_line": 7,
+   "versions": []
+  },
+  {
+   "conditions": [],
+   "content_sha256": "3b099dc5cc26dfc0fe2dcf88afd9ad70f10957911bd2fbc6ba2815e8417642e9",
+   "end_line": 11,
+   "expect": "specify `cancel-in-progress: true`",
+   "heading_ancestry": [
+    "Using concurrency in different scenarios"
+   ],
+   "include_chain": [
+    "data/reusables/actions/jobs/section-using-concurrency.md",
+    "data/reusables/actions/jobs/section-using-concurrency-jobs.md"
+   ],
+   "path": "data/reusables/actions/actions-group-concurrency.md",
+   "propositions": [
+    {
+     "ambiguities": [
+      "Evaluation of the cancel-in-progress expression is not specified beyond its allowed contexts; the model takes an already evaluated boolean."
+     ],
+     "formalization": "CAPABILITY: cancel-in-progress = true additionally cancels the running run of the group; cancel-in-progress may be an expression over the allowed contexts.",
+     "preserved_differences": [],
+     "rules": [
+      "K5"
+     ],
+     "semantic_ast": {
+      "action": "cancel",
+      "consequences": [],
+      "exceptions": [],
+      "modality": "DESCRIPTIVE",
+      "object": "the currently running job or workflow in the same concurrency group",
+      "parameters": [],
+      "polarity": "POSITIVE",
+      "preconditions": [],
+      "qualifiers": [
+       "cancel-in-progress may be a conditional expression using the allowed contexts"
+      ],
+      "scope": [
+       "github/docs",
+       "data/reusables/actions/actions-group-concurrency.md"
+      ],
+      "subject": "cancel-in-progress: true"
+     }
+    }
+   ],
+   "semantic_kind": "CAPABILITY",
+   "start_line": 11,
+   "versions": []
+  },
+  {
+   "conditions": [
+    "ifversion actions-nga"
+   ],
+   "content_sha256": "3b099dc5cc26dfc0fe2dcf88afd9ad70f10957911bd2fbc6ba2815e8417642e9",
+   "end_line": 15,
+   "expect": "use the optional `queue` property",
+   "heading_ancestry": [
+    "Using concurrency in different scenarios"
+   ],
+   "include_chain": [
+    "data/reusables/actions/jobs/section-using-concurrency.md",
+    "data/reusables/actions/jobs/section-using-concurrency-jobs.md"
+   ],
+   "path": "data/reusables/actions/actions-group-concurrency.md",
+   "propositions": [
+    {
+     "ambiguities": [
+      "The text is silent on queue where actions-nga does not apply; the model rejects the key there rather than assume it is accepted."
+     ],
+     "formalization": "CAPABILITY: queue in {single, max}, optional, default single; it allows more than one pending run to wait.",
+     "preserved_differences": [],
+     "rules": [
+      "K13"
+     ],
+     "semantic_ast": {
+      "action": "allow",
+      "consequences": [],
+      "exceptions": [],
+      "modality": "MAY",
+      "object": "more than one pending job or workflow run to wait in a concurrency group",
+      "parameters": [],
+      "polarity": "POSITIVE",
+      "preconditions": [],
+      "qualifiers": [
+       "accepts single or max"
+      ],
+      "scope": [
+       "github/docs",
+       "data/reusables/actions/actions-group-concurrency.md"
+      ],
+      "subject": "the queue property"
+     }
+    }
+   ],
+   "semantic_kind": "CAPABILITY",
+   "start_line": 15,
+   "versions": []
+  },
+  {
+   "conditions": [
+    "ifversion actions-nga"
+   ],
+   "content_sha256": "3b099dc5cc26dfc0fe2dcf88afd9ad70f10957911bd2fbc6ba2815e8417642e9",
+   "end_line": 17,
+   "expect": "`single` (default)",
+   "heading_ancestry": [
+    "Using concurrency in different scenarios"
+   ],
+   "include_chain": [
+    "data/reusables/actions/jobs/section-using-concurrency.md",
+    "data/reusables/actions/jobs/section-using-concurrency-jobs.md"
+   ],
+   "path": "data/reusables/actions/actions-group-concurrency.md",
+   "propositions": [
+    {
+     "ambiguities": [],
+     "formalization": "DEFINITION: queue = single: |pending(g)| <= 1; a newly queued run cancels and replaces the pending one.",
+     "preserved_differences": [],
+     "rules": [
+      "K4",
+      "K13"
+     ],
+     "semantic_ast": {
+      "action": "allow",
+      "consequences": [],
+      "exceptions": [],
+      "modality": "DESCRIPTIVE",
+      "object": "at most one pending run, canceling and replacing the existing pending run when a new run is queued",
+      "parameters": [],
+      "polarity": "POSITIVE",
+      "preconditions": [],
+      "qualifiers": [
+       "default value"
+      ],
+      "scope": [
+       "github/docs",
+       "data/reusables/actions/actions-group-concurrency.md"
+      ],
+      "subject": "queue: single"
+     }
+    }
+   ],
+   "semantic_kind": "FACT",
+   "start_line": 17,
+   "versions": []
+  },
+  {
+   "conditions": [
+    "ifversion actions-nga"
+   ],
+   "content_sha256": "3b099dc5cc26dfc0fe2dcf88afd9ad70f10957911bd2fbc6ba2815e8417642e9",
+   "end_line": 18,
+   "expect": "`max`: Up to 100",
+   "heading_ancestry": [
+    "Using concurrency in different scenarios"
+   ],
+   "include_chain": [
+    "data/reusables/actions/jobs/section-using-concurrency.md",
+    "data/reusables/actions/jobs/section-using-concurrency-jobs.md"
+   ],
+   "path": "data/reusables/actions/actions-group-concurrency.md",
+   "propositions": [
+    {
+     "ambiguities": [],
+     "formalization": "DEFINITION: queue = max: |pending(g)| <= 100, in FIFO order; a run queued while pending(g) holds 100 is canceled.",
+     "preserved_differences": [],
+     "rules": [
+      "K6"
+     ],
+     "semantic_ast": {
+      "action": "allow",
+      "consequences": [
+       "additional runs are canceled when the queue is full"
+      ],
+      "exceptions": [],
+      "modality": "DESCRIPTIVE",
+      "object": "up to 100 pending runs in a concurrency group and cancel every additional run when the queue is full",
+      "parameters": [],
+      "polarity": "POSITIVE",
+      "preconditions": [],
+      "qualifiers": [],
+      "scope": [
+       "github/docs",
+       "data/reusables/actions/actions-group-concurrency.md"
+      ],
+      "subject": "queue: max"
+     }
+    }
+   ],
+   "semantic_kind": "FACT",
+   "start_line": 18,
+   "versions": []
+  },
+  {
+   "conditions": [
+    "ifversion actions-nga"
+   ],
+   "content_sha256": "3b099dc5cc26dfc0fe2dcf88afd9ad70f10957911bd2fbc6ba2815e8417642e9",
+   "end_line": 20,
+   "expect": "is not allowed and will result in a workflow validation error",
+   "heading_ancestry": [
+    "Using concurrency in different scenarios"
+   ],
+   "include_chain": [
+    "data/reusables/actions/jobs/section-using-concurrency.md",
+    "data/reusables/actions/jobs/section-using-concurrency-jobs.md"
+   ],
+   "path": "data/reusables/actions/actions-group-concurrency.md",
+   "propositions": [
+    {
+     "ambiguities": [],
+     "formalization": "CONSTRAINT: queue = max and cancel-in-progress = true is a workflow validation error.",
+     "preserved_differences": [],
+     "rules": [
+      "K7"
+     ],
+     "semantic_ast": {
+      "action": "allow",
+      "consequences": [
+       "a workflow validation error results"
+      ],
+      "exceptions": [],
+      "modality": "DESCRIPTIVE",
+      "object": "a valid workflow",
+      "parameters": [],
+      "polarity": "NEGATIVE",
+      "preconditions": [],
+      "qualifiers": [],
+      "scope": [
+       "github/docs",
+       "data/reusables/actions/actions-group-concurrency.md"
+      ],
+      "subject": "the combination of queue: max and cancel-in-progress: true"
+     }
+    }
+   ],
+   "semantic_kind": "CONSTRAINT",
+   "start_line": 20,
+   "versions": []
+  },
+  {
+   "conditions": [],
+   "content_sha256": "3b099dc5cc26dfc0fe2dcf88afd9ad70f10957911bd2fbc6ba2815e8417642e9",
+   "end_line": 25,
+   "expect": "The concurrency group name is case insensitive",
+   "heading_ancestry": [
+    "Using concurrency in different scenarios"
+   ],
+   "include_chain": [
+    "data/reusables/actions/jobs/section-using-concurrency.md",
+    "data/reusables/actions/jobs/section-using-concurrency-jobs.md"
+   ],
+   "path": "data/reusables/actions/actions-group-concurrency.md",
+   "propositions": [
+    {
+     "ambiguities": [],
+     "formalization": "DEFINITION: group(a) = group(b) iff casefold(a) = casefold(b).",
+     "preserved_differences": [],
+     "rules": [
+      "K1"
+     ],
+     "semantic_ast": {
+      "action": "be",
+      "consequences": [],
+      "exceptions": [],
+      "modality": "DESCRIPTIVE",
+      "object": "case insensitive, so prod and Prod name the same group",
+      "parameters": [],
+      "polarity": "POSITIVE",
+      "preconditions": [],
+      "qualifiers": [],
+      "scope": [
+       "github/docs",
+       "data/reusables/actions/actions-group-concurrency.md"
+      ],
+      "subject": "the concurrency group name"
+     }
+    }
+   ],
+   "semantic_kind": "FACT",
+   "start_line": 25,
+   "versions": []
+  },
+  {
+   "conditions": [],
+   "content_sha256": "3b099dc5cc26dfc0fe2dcf88afd9ad70f10957911bd2fbc6ba2815e8417642e9",
+   "end_line": 26,
+   "expect": "processed in first-in-first-out (FIFO) order",
+   "heading_ancestry": [
+    "Using concurrency in different scenarios"
+   ],
+   "include_chain": [
+    "data/reusables/actions/jobs/section-using-concurrency.md",
+    "data/reusables/actions/jobs/section-using-concurrency-jobs.md"
+   ],
+   "path": "data/reusables/actions/actions-group-concurrency.md",
+   "propositions": [
+    {
+     "ambiguities": [
+      "The docs deny any ordering guarantee while describing FIFO; the model implements strict FIFO as the stated intent and does not claim it is observable."
+     ],
+     "formalization": "DESCRIPTIVE: pending runs of a group start in order of the time each began waiting; the order is not guaranteed because that time may vary.",
+     "preserved_differences": [],
+     "rules": [
+      "K8"
+     ],
+     "semantic_ast": {
+      "action": "process",
+      "consequences": [],
+      "exceptions": [],
+      "modality": "DESCRIPTIVE",
+      "object": "jobs or workflow runs in a concurrency group first-in-first-out by the time each started waiting, not the dispatch time",
+      "parameters": [],
+      "polarity": "POSITIVE",
+      "preconditions": [],
+      "qualifiers": [
+       "ordering is not guaranteed"
+      ],
+      "scope": [
+       "github/docs",
+       "data/reusables/actions/actions-group-concurrency.md"
+      ],
+      "subject": "GitHub Actions"
+     }
+    }
+   ],
+   "semantic_kind": "FACT",
+   "start_line": 26,
+   "versions": []
+  },
+  {
+   "conditions": [],
+   "content_sha256": "3b099dc5cc26dfc0fe2dcf88afd9ad70f10957911bd2fbc6ba2815e8417642e9",
+   "end_line": 144,
+   "expect": "without defining a particular concurrency group",
+   "heading_ancestry": [
+    "Example: Using concurrency to cancel any in-progress job or run"
+   ],
+   "include_chain": [
+    "data/reusables/actions/jobs/section-using-concurrency.md",
+    "data/reusables/actions/jobs/section-using-concurrency-jobs.md"
+   ],
+   "path": "data/reusables/actions/actions-group-concurrency.md",
+   "propositions": [
+    {
+     "ambiguities": [
+      "The sentence contradicts the example above it, which sets group to github.ref; preserved without a rule because the group-keyed model cannot represent an absent group that cancels everything."
+     ],
+     "formalization": "DESCRIPTIVE: the text says a run is canceled with no particular group defined, while the example it describes defines group = ${{ github.ref }}.",
+     "preserved_differences": [],
+     "rules": [],
+     "semantic_ast": {
+      "action": "cancel",
+      "consequences": [],
+      "exceptions": [],
+      "modality": "DESCRIPTIVE",
+      "object": "any in-progress run of the job or workflow when no particular concurrency group is defined",
+      "parameters": [],
+      "polarity": "POSITIVE",
+      "preconditions": [],
+      "qualifiers": [
+       "the example sets group to the ref"
+      ],
+      "scope": [
+       "github/docs",
+       "data/reusables/actions/actions-group-concurrency.md"
+      ],
+      "subject": "GitHub Actions"
+     }
+    }
+   ],
+   "semantic_kind": "FACT",
+   "start_line": 144,
+   "versions": []
+  },
+  {
+   "conditions": [],
+   "content_sha256": "3b099dc5cc26dfc0fe2dcf88afd9ad70f10957911bd2fbc6ba2815e8417642e9",
+   "end_line": 148,
+   "expect": "is only defined on `pull_request` events",
+   "heading_ancestry": [
+    "Example: Using a fallback value"
+   ],
+   "include_chain": [
+    "data/reusables/actions/jobs/section-using-concurrency.md",
+    "data/reusables/actions/jobs/section-using-concurrency-jobs.md"
+   ],
+   "path": "data/reusables/actions/actions-group-concurrency.md",
+   "propositions": [
+    {
+     "ambiguities": [
+      "The docs do not say whether pull_request_target and the review events define github.head_ref; the model follows the sentence literally."
+     ],
+     "formalization": "DESCRIPTIVE: github.head_ref is defined only for event = pull_request; elsewhere a group using it without a fallback is a syntax error; the fallback ${{ github.head_ref || github.run_id }} yields the run id.",
+     "preserved_differences": [],
+     "rules": [
+      "K12"
+     ],
+     "semantic_ast": {
+      "action": "be",
+      "consequences": [],
+      "exceptions": [
+       "the run ID is unique and defined for every run"
+      ],
+      "modality": "DESCRIPTIVE",
+      "object": "defined only on pull_request events, so other events need a fallback such as the run ID to avoid a syntax error",
+      "parameters": [],
+      "polarity": "POSITIVE",
+      "preconditions": [],
+      "qualifiers": [],
+      "scope": [
+       "github/docs",
+       "data/reusables/actions/actions-group-concurrency.md"
+      ],
+      "subject": "github.head_ref"
+     }
+    }
+   ],
+   "semantic_kind": "FACT",
+   "start_line": 148,
+   "versions": []
+  },
+  {
+   "conditions": [],
+   "content_sha256": "3b099dc5cc26dfc0fe2dcf88afd9ad70f10957911bd2fbc6ba2815e8417642e9",
+   "end_line": 162,
+   "expect": "concurrency group names must be unique across workflows",
+   "heading_ancestry": [
+    "Example: Only cancel in-progress jobs or runs for the current workflow"
+   ],
+   "include_chain": [
+    "data/reusables/actions/jobs/section-using-concurrency.md",
+    "data/reusables/actions/jobs/section-using-concurrency-jobs.md"
+   ],
+   "path": "data/reusables/actions/actions-group-concurrency.md",
+   "propositions": [
+    {
+     "ambiguities": [],
+     "formalization": "CONSTRAINT: a group is keyed by repository and name, not by workflow; two workflows with one group name share it and cancel each other unless the name includes github.workflow.",
+     "preserved_differences": [],
+     "rules": [
+      "K11"
+     ],
+     "semantic_ast": {
+      "action": "be",
+      "consequences": [],
+      "exceptions": [],
+      "modality": "DESCRIPTIVE",
+      "object": "unique across workflows in a repository, otherwise any previous in-progress or pending job is canceled regardless of the workflow",
+      "parameters": [],
+      "polarity": "POSITIVE",
+      "preconditions": [],
+      "qualifiers": [],
+      "scope": [
+       "github/docs",
+       "data/reusables/actions/actions-group-concurrency.md"
+      ],
+      "subject": "concurrency group names"
+     }
+    }
+   ],
+   "semantic_kind": "CONSTRAINT",
+   "start_line": 162,
+   "versions": []
+  },
+  {
+   "conditions": [],
+   "content_sha256": "3b099dc5cc26dfc0fe2dcf88afd9ad70f10957911bd2fbc6ba2815e8417642e9",
+   "end_line": 192,
+   "expect": "multiple pushes to a `release/1.2.3` branch would not cancel",
+   "heading_ancestry": [
+    "Example: Only cancel in-progress jobs on specific branches"
+   ],
+   "include_chain": [
+    "data/reusables/actions/jobs/section-using-concurrency.md",
+    "data/reusables/actions/jobs/section-using-concurrency-jobs.md"
+   ],
+   "path": "data/reusables/actions/actions-group-concurrency.md",
+   "propositions": [
+    {
+     "ambiguities": [
+      "The example depends on expression evaluation, which the model does not implement; it is preserved without a rule."
+     ],
+     "formalization": "DESCRIPTIVE: with cancel-in-progress = !contains(github.ref, 'release/'), pushes to a release branch do not cancel in-progress runs; pushes to other branches do.",
+     "preserved_differences": [],
+     "rules": [],
+     "semantic_ast": {
+      "action": "cancel",
+      "consequences": [],
+      "exceptions": [
+       "pushes to a release/ branch do not cancel in-progress runs"
+      ],
+      "modality": "DESCRIPTIVE",
+      "object": "in-progress runs on non-release branches only",
+      "parameters": [],
+      "polarity": "POSITIVE",
+      "preconditions": [],
+      "qualifiers": [],
+      "scope": [
+       "github/docs",
+       "data/reusables/actions/actions-group-concurrency.md"
+      ],
+      "subject": "cancel-in-progress as an expression"
+     }
+    }
+   ],
+   "semantic_kind": "FACT",
+   "start_line": 192,
+   "versions": []
+  }
+ ],
+ "repository": "github/docs",
+ "schema": "ges.concurrency-semantics-annotations.v1"
+}

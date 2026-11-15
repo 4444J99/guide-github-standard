@@ -1,0 +1,2546 @@
+{
+ "cases": [
+  {
+   "expect": {
+    "normalized": {
+     "cancel_in_progress": false,
+     "group": "g",
+     "queue": "single"
+    }
+   },
+   "given": {
+    "flags": [
+     "actions-nga"
+    ],
+    "spec": {
+     "group": "g"
+    }
+   },
+   "id": "K13-default-queue-is-single",
+   "kind": "validate",
+   "rules": [
+    "K13"
+   ]
+  },
+  {
+   "expect": {
+    "normalized": {
+     "cancel_in_progress": false,
+     "group": "g",
+     "queue": "max"
+    }
+   },
+   "given": {
+    "flags": [
+     "actions-nga"
+    ],
+    "spec": {
+     "group": "g",
+     "queue": "max"
+    }
+   },
+   "id": "K13-queue-max-accepted",
+   "kind": "validate",
+   "rules": [
+    "K13"
+   ]
+  },
+  {
+   "expect": {
+    "error": "queue must be one of single|max"
+   },
+   "given": {
+    "flags": [
+     "actions-nga"
+    ],
+    "spec": {
+     "group": "g",
+     "queue": "all"
+    }
+   },
+   "id": "K13-queue-unknown-value-rejected",
+   "kind": "validate",
+   "rules": [
+    "K13"
+   ]
+  },
+  {
+   "expect": {
+    "error": "queue is documented only where actions-nga applies"
+   },
+   "given": {
+    "spec": {
+     "group": "g",
+     "queue": "max"
+    }
+   },
+   "id": "K13-queue-without-flag-rejected",
+   "kind": "validate",
+   "rules": [
+    "K13"
+   ]
+  },
+  {
+   "expect": {
+    "error": "queue: max with cancel-in-progress: true is a workflow validation error"
+   },
+   "given": {
+    "flags": [
+     "actions-nga"
+    ],
+    "spec": {
+     "cancel-in-progress": true,
+     "group": "g",
+     "queue": "max"
+    }
+   },
+   "id": "K7-max-with-cancel-is-validation-error",
+   "kind": "validate",
+   "rules": [
+    "K7"
+   ]
+  },
+  {
+   "expect": {
+    "normalized": {
+     "cancel_in_progress": true,
+     "group": "g",
+     "queue": "single"
+    }
+   },
+   "given": {
+    "flags": [
+     "actions-nga"
+    ],
+    "spec": {
+     "cancel-in-progress": true,
+     "group": "g",
+     "queue": "single"
+    }
+   },
+   "id": "K7-single-with-cancel-is-valid",
+   "kind": "validate",
+   "rules": [
+    "K7",
+    "K5"
+   ]
+  },
+  {
+   "expect": {
+    "error": "cancel-in-progress must be evaluated to a boolean first"
+   },
+   "given": {
+    "spec": {
+     "cancel-in-progress": "${{ !contains(github.ref, 'release/') }}",
+     "group": "g"
+    }
+   },
+   "id": "K5-unevaluated-expression-rejected",
+   "kind": "validate",
+   "rules": [
+    "K5"
+   ]
+  },
+  {
+   "expect": {
+    "allowed": true
+   },
+   "given": {
+    "expression": "${{ github.workflow }}-${{ github.ref }}",
+    "level": "workflow"
+   },
+   "id": "K10-workflow-allows-github-context",
+   "kind": "expression",
+   "rules": [
+    "K10"
+   ]
+  },
+  {
+   "expect": {
+    "allowed": true
+   },
+   "given": {
+    "expression": "deploy-${{ inputs.env }}-${{ vars.REGION }}",
+    "level": "workflow"
+   },
+   "id": "K10-workflow-allows-inputs-and-vars",
+   "kind": "expression",
+   "rules": [
+    "K10"
+   ]
+  },
+  {
+   "expect": {
+    "error": "context matrix is not allowed in a workflow-level concurrency group"
+   },
+   "given": {
+    "expression": "build-${{ matrix.os }}",
+    "level": "workflow"
+   },
+   "id": "K10-workflow-rejects-matrix",
+   "kind": "expression",
+   "rules": [
+    "K10"
+   ]
+  },
+  {
+   "expect": {
+    "allowed": true
+   },
+   "given": {
+    "expression": "${{ matrix.os }}-${{ needs.setup.outputs.id }}-${{ strategy.job-index }}",
+    "level": "job"
+   },
+   "id": "K10-job-allows-matrix-needs-strategy",
+   "kind": "expression",
+   "rules": [
+    "K10"
+   ]
+  },
+  {
+   "expect": {
+    "error": "context secrets is not allowed in a job-level concurrency group"
+   },
+   "given": {
+    "expression": "${{ secrets.TOKEN }}",
+    "level": "job"
+   },
+   "id": "K10-job-rejects-secrets",
+   "kind": "expression",
+   "rules": [
+    "K10"
+   ]
+  },
+  {
+   "expect": {
+    "error": "context env is not allowed in a workflow-level concurrency group"
+   },
+   "given": {
+    "expression": "${{ env.NAME }}",
+    "level": "workflow"
+   },
+   "id": "K10-env-rejected-at-workflow-level",
+   "kind": "expression",
+   "rules": [
+    "K10"
+   ]
+  },
+  {
+   "expect": {
+    "allowed": true
+   },
+   "given": {
+    "expression": "staging_${{ !contains(github.ref, 'release/') }}",
+    "level": "workflow"
+   },
+   "id": "K10-plain-string-and-function-calls-allowed",
+   "kind": "expression",
+   "rules": [
+    "K10"
+   ]
+  },
+  {
+   "expect": {
+    "allowed": true
+   },
+   "given": {
+    "expression": "${{ github.ref == 'env.x' }}",
+    "level": "workflow"
+   },
+   "id": "K10-context-name-inside-string-literal-ignored",
+   "kind": "expression",
+   "rules": [
+    "K10"
+   ]
+  },
+  {
+   "expect": {
+    "group": "feature"
+   },
+   "given": {
+    "event": "pull_request",
+    "fallback": "99",
+    "head_ref": "feature"
+   },
+   "id": "K12-pull-request-uses-head-ref",
+   "kind": "head-ref",
+   "rules": [
+    "K12"
+   ]
+  },
+  {
+   "expect": {
+    "group": "99"
+   },
+   "given": {
+    "event": "push",
+    "fallback": "99"
+   },
+   "id": "K12-push-falls-back-to-run-id",
+   "kind": "head-ref",
+   "rules": [
+    "K12"
+   ]
+  },
+  {
+   "expect": {
+    "error": "github.head_ref is undefined for event push; provide a fallback"
+   },
+   "given": {
+    "event": "push"
+   },
+   "id": "K12-push-without-fallback-is-an-error",
+   "kind": "head-ref",
+   "rules": [
+    "K12"
+   ]
+  },
+  {
+   "expect": {
+    "effects": [
+     [
+      "r1",
+      "running"
+     ],
+     [
+      "r2",
+      "running"
+     ],
+     [
+      "r3",
+      "running"
+     ]
+    ],
+    "groups": {}
+   },
+   "given": {
+    "steps": [
+     {
+      "op": "submit",
+      "run": "r1",
+      "spec": null
+     },
+     {
+      "op": "submit",
+      "run": "r2",
+      "spec": null
+     },
+     {
+      "op": "submit",
+      "run": "r3",
+      "spec": null
+     }
+    ]
+   },
+   "id": "K9-no-concurrency-key-runs-unconstrained",
+   "kind": "scenario",
+   "rules": [
+    "K9"
+   ]
+  },
+  {
+   "expect": {
+    "effects": [
+     [
+      "r1",
+      "running"
+     ],
+     [
+      "r2",
+      "pending"
+     ]
+    ],
+    "groups": {
+     "r/r#g": {
+      "pending": [
+       "r2"
+      ],
+      "running": [
+       "r1"
+      ]
+     }
+    }
+   },
+   "given": {
+    "flags": [
+     "actions-nga"
+    ],
+    "steps": [
+     {
+      "op": "submit",
+      "run": "r1",
+      "spec": "g"
+     },
+     {
+      "op": "submit",
+      "run": "r2",
+      "spec": "g"
+     }
+    ]
+   },
+   "id": "K2-K3-second-run-waits-as-pending",
+   "kind": "scenario",
+   "rules": [
+    "K2",
+    "K3"
+   ]
+  },
+  {
+   "expect": {
+    "effects": [
+     [
+      "r1",
+      "running"
+     ],
+     [
+      "r2",
+      "pending"
+     ],
+     [
+      "r2",
+      "canceled"
+     ],
+     [
+      "r3",
+      "pending"
+     ]
+    ],
+    "groups": {
+     "r/r#g": {
+      "pending": [
+       "r3"
+      ],
+      "running": [
+       "r1"
+      ]
+     }
+    }
+   },
+   "given": {
+    "flags": [
+     "actions-nga"
+    ],
+    "steps": [
+     {
+      "op": "submit",
+      "run": "r1",
+      "spec": "g"
+     },
+     {
+      "op": "submit",
+      "run": "r2",
+      "spec": "g"
+     },
+     {
+      "op": "submit",
+      "run": "r3",
+      "spec": "g"
+     }
+    ]
+   },
+   "id": "K4-new-pending-replaces-old-pending",
+   "kind": "scenario",
+   "rules": [
+    "K2",
+    "K3",
+    "K4"
+   ]
+  },
+  {
+   "expect": {
+    "effects": [
+     [
+      "r1",
+      "running"
+     ],
+     [
+      "r2",
+      "pending"
+     ],
+     [
+      "r2",
+      "canceled"
+     ],
+     [
+      "r3",
+      "pending"
+     ]
+    ],
+    "groups": {
+     "r/r#g": {
+      "pending": [
+       "r3"
+      ],
+      "running": [
+       "r1"
+      ]
+     }
+    }
+   },
+   "given": {
+    "steps": [
+     {
+      "op": "submit",
+      "run": "r1",
+      "spec": "g"
+     },
+     {
+      "op": "submit",
+      "run": "r2",
+      "spec": "g"
+     },
+     {
+      "op": "submit",
+      "run": "r3",
+      "spec": "g"
+     }
+    ]
+   },
+   "id": "K4-same-behaviour-without-flag",
+   "kind": "scenario",
+   "rules": [
+    "K2",
+    "K3",
+    "K4"
+   ]
+  },
+  {
+   "expect": {
+    "effects": [
+     [
+      "r1",
+      "running"
+     ],
+     [
+      "r1",
+      "canceled"
+     ],
+     [
+      "r2",
+      "running"
+     ]
+    ],
+    "groups": {
+     "r/r#g": {
+      "pending": [],
+      "running": [
+       "r2"
+      ]
+     }
+    }
+   },
+   "given": {
+    "flags": [
+     "actions-nga"
+    ],
+    "steps": [
+     {
+      "op": "submit",
+      "run": "r1",
+      "spec": "g"
+     },
+     {
+      "op": "submit",
+      "run": "r2",
+      "spec": {
+       "cancel-in-progress": true,
+       "group": "g"
+      }
+     }
+    ]
+   },
+   "id": "K5-cancel-in-progress-cancels-running",
+   "kind": "scenario",
+   "rules": [
+    "K5"
+   ]
+  },
+  {
+   "expect": {
+    "effects": [
+     [
+      "r1",
+      "running"
+     ],
+     [
+      "r2",
+      "pending"
+     ],
+     [
+      "r1",
+      "canceled"
+     ],
+     [
+      "r2",
+      "canceled"
+     ],
+     [
+      "r3",
+      "running"
+     ]
+    ],
+    "groups": {
+     "r/r#g": {
+      "pending": [],
+      "running": [
+       "r3"
+      ]
+     }
+    }
+   },
+   "given": {
+    "flags": [
+     "actions-nga"
+    ],
+    "steps": [
+     {
+      "op": "submit",
+      "run": "r1",
+      "spec": "g"
+     },
+     {
+      "op": "submit",
+      "run": "r2",
+      "spec": "g"
+     },
+     {
+      "op": "submit",
+      "run": "r3",
+      "spec": {
+       "cancel-in-progress": true,
+       "group": "g"
+      }
+     }
+    ]
+   },
+   "id": "K5-cancel-in-progress-also-drops-pending",
+   "kind": "scenario",
+   "rules": [
+    "K5",
+    "K4"
+   ]
+  },
+  {
+   "expect": {
+    "effects": [
+     [
+      "r1",
+      "running"
+     ],
+     [
+      "r2",
+      "pending"
+     ]
+    ],
+    "groups": {
+     "r/r#g": {
+      "pending": [
+       "r2"
+      ],
+      "running": [
+       "r1"
+      ]
+     }
+    }
+   },
+   "given": {
+    "steps": [
+     {
+      "op": "submit",
+      "run": "r1",
+      "spec": "g"
+     },
+     {
+      "op": "submit",
+      "run": "r2",
+      "spec": {
+       "cancel-in-progress": false,
+       "group": "g"
+      }
+     }
+    ]
+   },
+   "id": "K5-cancel-false-keeps-running",
+   "kind": "scenario",
+   "rules": [
+    "K5"
+   ]
+  },
+  {
+   "expect": {
+    "effects": [
+     [
+      "r1",
+      "running"
+     ],
+     [
+      "r2",
+      "pending"
+     ],
+     [
+      "r2",
+      "canceled"
+     ],
+     [
+      "r3",
+      "pending"
+     ]
+    ],
+    "groups": {
+     "r/r#prod": {
+      "pending": [
+       "r3"
+      ],
+      "running": [
+       "r1"
+      ]
+     }
+    }
+   },
+   "given": {
+    "steps": [
+     {
+      "op": "submit",
+      "run": "r1",
+      "spec": "Prod"
+     },
+     {
+      "op": "submit",
+      "run": "r2",
+      "spec": "prod"
+     },
+     {
+      "op": "submit",
+      "run": "r3",
+      "spec": "PROD"
+     }
+    ]
+   },
+   "id": "K1-group-name-is-case-insensitive",
+   "kind": "scenario",
+   "rules": [
+    "K1",
+    "K3"
+   ]
+  },
+  {
+   "expect": {
+    "effects": [
+     [
+      "r1",
+      "running"
+     ],
+     [
+      "r2",
+      "running"
+     ]
+    ],
+    "groups": {
+     "o/a#g": {
+      "pending": [],
+      "running": [
+       "r1"
+      ]
+     },
+     "o/b#g": {
+      "pending": [],
+      "running": [
+       "r2"
+      ]
+     }
+    }
+   },
+   "given": {
+    "steps": [
+     {
+      "op": "submit",
+      "repository": "o/a",
+      "run": "r1",
+      "spec": "g"
+     },
+     {
+      "op": "submit",
+      "repository": "o/b",
+      "run": "r2",
+      "spec": "g"
+     }
+    ]
+   },
+   "id": "K11-group-is-scoped-to-the-repository",
+   "kind": "scenario",
+   "rules": [
+    "K11"
+   ]
+  },
+  {
+   "expect": {
+    "effects": [
+     [
+      "wf-a-run",
+      "running"
+     ],
+     [
+      "wf-a-run",
+      "canceled"
+     ],
+     [
+      "wf-b-run",
+      "running"
+     ]
+    ],
+    "groups": {
+     "r/r#${{ github.ref }}": {
+      "pending": [],
+      "running": [
+       "wf-b-run"
+      ]
+     }
+    }
+   },
+   "given": {
+    "steps": [
+     {
+      "op": "submit",
+      "run": "wf-a-run",
+      "spec": {
+       "cancel-in-progress": true,
+       "group": "${{ github.ref }}"
+      }
+     },
+     {
+      "op": "submit",
+      "run": "wf-b-run",
+      "spec": {
+       "cancel-in-progress": true,
+       "group": "${{ github.ref }}"
+      }
+     }
+    ]
+   },
+   "id": "K11-same-name-in-two-workflows-collides",
+   "kind": "scenario",
+   "rules": [
+    "K11",
+    "K5"
+   ]
+  },
+  {
+   "expect": {
+    "effects": [
+     [
+      "wf-a-run",
+      "running"
+     ],
+     [
+      "wf-b-run",
+      "running"
+     ]
+    ],
+    "groups": {
+     "r/r#a-refs/heads/main": {
+      "pending": [],
+      "running": [
+       "wf-a-run"
+      ]
+     },
+     "r/r#b-refs/heads/main": {
+      "pending": [],
+      "running": [
+       "wf-b-run"
+      ]
+     }
+    }
+   },
+   "given": {
+    "steps": [
+     {
+      "op": "submit",
+      "run": "wf-a-run",
+      "spec": {
+       "cancel-in-progress": true,
+       "group": "a-refs/heads/main"
+      }
+     },
+     {
+      "op": "submit",
+      "run": "wf-b-run",
+      "spec": {
+       "cancel-in-progress": true,
+       "group": "b-refs/heads/main"
+      }
+     }
+    ]
+   },
+   "id": "K11-workflow-name-in-group-keeps-workflows-apart",
+   "kind": "scenario",
+   "rules": [
+    "K11"
+   ]
+  },
+  {
+   "expect": {
+    "effects": [
+     [
+      "r1",
+      "running"
+     ],
+     [
+      "r2",
+      "pending"
+     ],
+     [
+      "r3",
+      "pending"
+     ],
+     [
+      "r4",
+      "pending"
+     ],
+     [
+      "r1",
+      "completed"
+     ],
+     [
+      "r2",
+      "running"
+     ],
+     [
+      "r2",
+      "completed"
+     ],
+     [
+      "r3",
+      "running"
+     ]
+    ],
+    "groups": {
+     "r/r#g": {
+      "pending": [
+       "r4"
+      ],
+      "running": [
+       "r3"
+      ]
+     }
+    }
+   },
+   "given": {
+    "flags": [
+     "actions-nga"
+    ],
+    "steps": [
+     {
+      "op": "submit",
+      "run": "r1",
+      "spec": {
+       "group": "g",
+       "queue": "max"
+      }
+     },
+     {
+      "op": "submit",
+      "run": "r2",
+      "spec": {
+       "group": "g",
+       "queue": "max"
+      }
+     },
+     {
+      "op": "submit",
+      "run": "r3",
+      "spec": {
+       "group": "g",
+       "queue": "max"
+      }
+     },
+     {
+      "op": "submit",
+      "run": "r4",
+      "spec": {
+       "group": "g",
+       "queue": "max"
+      }
+     },
+     {
+      "op": "finish",
+      "run": "r1"
+     },
+     {
+      "op": "finish",
+      "run": "r2"
+     }
+    ]
+   },
+   "id": "K6-K8-queue-max-keeps-every-waiting-run-in-order",
+   "kind": "scenario",
+   "rules": [
+    "K6",
+    "K8"
+   ]
+  },
+  {
+   "expect": {
+    "effects": [
+     [
+      "r0",
+      "running"
+     ],
+     [
+      "p1",
+      "pending"
+     ],
+     [
+      "p2",
+      "pending"
+     ],
+     [
+      "p3",
+      "pending"
+     ],
+     [
+      "p4",
+      "pending"
+     ],
+     [
+      "p5",
+      "pending"
+     ],
+     [
+      "p6",
+      "pending"
+     ],
+     [
+      "p7",
+      "pending"
+     ],
+     [
+      "p8",
+      "pending"
+     ],
+     [
+      "p9",
+      "pending"
+     ],
+     [
+      "p10",
+      "pending"
+     ],
+     [
+      "p11",
+      "pending"
+     ],
+     [
+      "p12",
+      "pending"
+     ],
+     [
+      "p13",
+      "pending"
+     ],
+     [
+      "p14",
+      "pending"
+     ],
+     [
+      "p15",
+      "pending"
+     ],
+     [
+      "p16",
+      "pending"
+     ],
+     [
+      "p17",
+      "pending"
+     ],
+     [
+      "p18",
+      "pending"
+     ],
+     [
+      "p19",
+      "pending"
+     ],
+     [
+      "p20",
+      "pending"
+     ],
+     [
+      "p21",
+      "pending"
+     ],
+     [
+      "p22",
+      "pending"
+     ],
+     [
+      "p23",
+      "pending"
+     ],
+     [
+      "p24",
+      "pending"
+     ],
+     [
+      "p25",
+      "pending"
+     ],
+     [
+      "p26",
+      "pending"
+     ],
+     [
+      "p27",
+      "pending"
+     ],
+     [
+      "p28",
+      "pending"
+     ],
+     [
+      "p29",
+      "pending"
+     ],
+     [
+      "p30",
+      "pending"
+     ],
+     [
+      "p31",
+      "pending"
+     ],
+     [
+      "p32",
+      "pending"
+     ],
+     [
+      "p33",
+      "pending"
+     ],
+     [
+      "p34",
+      "pending"
+     ],
+     [
+      "p35",
+      "pending"
+     ],
+     [
+      "p36",
+      "pending"
+     ],
+     [
+      "p37",
+      "pending"
+     ],
+     [
+      "p38",
+      "pending"
+     ],
+     [
+      "p39",
+      "pending"
+     ],
+     [
+      "p40",
+      "pending"
+     ],
+     [
+      "p41",
+      "pending"
+     ],
+     [
+      "p42",
+      "pending"
+     ],
+     [
+      "p43",
+      "pending"
+     ],
+     [
+      "p44",
+      "pending"
+     ],
+     [
+      "p45",
+      "pending"
+     ],
+     [
+      "p46",
+      "pending"
+     ],
+     [
+      "p47",
+      "pending"
+     ],
+     [
+      "p48",
+      "pending"
+     ],
+     [
+      "p49",
+      "pending"
+     ],
+     [
+      "p50",
+      "pending"
+     ],
+     [
+      "p51",
+      "pending"
+     ],
+     [
+      "p52",
+      "pending"
+     ],
+     [
+      "p53",
+      "pending"
+     ],
+     [
+      "p54",
+      "pending"
+     ],
+     [
+      "p55",
+      "pending"
+     ],
+     [
+      "p56",
+      "pending"
+     ],
+     [
+      "p57",
+      "pending"
+     ],
+     [
+      "p58",
+      "pending"
+     ],
+     [
+      "p59",
+      "pending"
+     ],
+     [
+      "p60",
+      "pending"
+     ],
+     [
+      "p61",
+      "pending"
+     ],
+     [
+      "p62",
+      "pending"
+     ],
+     [
+      "p63",
+      "pending"
+     ],
+     [
+      "p64",
+      "pending"
+     ],
+     [
+      "p65",
+      "pending"
+     ],
+     [
+      "p66",
+      "pending"
+     ],
+     [
+      "p67",
+      "pending"
+     ],
+     [
+      "p68",
+      "pending"
+     ],
+     [
+      "p69",
+      "pending"
+     ],
+     [
+      "p70",
+      "pending"
+     ],
+     [
+      "p71",
+      "pending"
+     ],
+     [
+      "p72",
+      "pending"
+     ],
+     [
+      "p73",
+      "pending"
+     ],
+     [
+      "p74",
+      "pending"
+     ],
+     [
+      "p75",
+      "pending"
+     ],
+     [
+      "p76",
+      "pending"
+     ],
+     [
+      "p77",
+      "pending"
+     ],
+     [
+      "p78",
+      "pending"
+     ],
+     [
+      "p79",
+      "pending"
+     ],
+     [
+      "p80",
+      "pending"
+     ],
+     [
+      "p81",
+      "pending"
+     ],
+     [
+      "p82",
+      "pending"
+     ],
+     [
+      "p83",
+      "pending"
+     ],
+     [
+      "p84",
+      "pending"
+     ],
+     [
+      "p85",
+      "pending"
+     ],
+     [
+      "p86",
+      "pending"
+     ],
+     [
+      "p87",
+      "pending"
+     ],
+     [
+      "p88",
+      "pending"
+     ],
+     [
+      "p89",
+      "pending"
+     ],
+     [
+      "p90",
+      "pending"
+     ],
+     [
+      "p91",
+      "pending"
+     ],
+     [
+      "p92",
+      "pending"
+     ],
+     [
+      "p93",
+      "pending"
+     ],
+     [
+      "p94",
+      "pending"
+     ],
+     [
+      "p95",
+      "pending"
+     ],
+     [
+      "p96",
+      "pending"
+     ],
+     [
+      "p97",
+      "pending"
+     ],
+     [
+      "p98",
+      "pending"
+     ],
+     [
+      "p99",
+      "pending"
+     ],
+     [
+      "p100",
+      "pending"
+     ],
+     [
+      "p101",
+      "canceled"
+     ]
+    ],
+    "groups": {
+     "r/r#g": {
+      "pending": [
+       "p1",
+       "p2",
+       "p3",
+       "p4",
+       "p5",
+       "p6",
+       "p7",
+       "p8",
+       "p9",
+       "p10",
+       "p11",
+       "p12",
+       "p13",
+       "p14",
+       "p15",
+       "p16",
+       "p17",
+       "p18",
+       "p19",
+       "p20",
+       "p21",
+       "p22",
+       "p23",
+       "p24",
+       "p25",
+       "p26",
+       "p27",
+       "p28",
+       "p29",
+       "p30",
+       "p31",
+       "p32",
+       "p33",
+       "p34",
+       "p35",
+       "p36",
+       "p37",
+       "p38",
+       "p39",
+       "p40",
+       "p41",
+       "p42",
+       "p43",
+       "p44",
+       "p45",
+       "p46",
+       "p47",
+       "p48",
+       "p49",
+       "p50",
+       "p51",
+       "p52",
+       "p53",
+       "p54",
+       "p55",
+       "p56",
+       "p57",
+       "p58",
+       "p59",
+       "p60",
+       "p61",
+       "p62",
+       "p63",
+       "p64",
+       "p65",
+       "p66",
+       "p67",
+       "p68",
+       "p69",
+       "p70",
+       "p71",
+       "p72",
+       "p73",
+       "p74",
+       "p75",
+       "p76",
+       "p77",
+       "p78",
+       "p79",
+       "p80",
+       "p81",
+       "p82",
+       "p83",
+       "p84",
+       "p85",
+       "p86",
+       "p87",
+       "p88",
+       "p89",
+       "p90",
+       "p91",
+       "p92",
+       "p93",
+       "p94",
+       "p95",
+       "p96",
+       "p97",
+       "p98",
+       "p99",
+       "p100"
+      ],
+      "running": [
+       "r0"
+      ]
+     }
+    }
+   },
+   "given": {
+    "flags": [
+     "actions-nga"
+    ],
+    "steps": [
+     {
+      "op": "submit",
+      "run": "r0",
+      "spec": {
+       "group": "g",
+       "queue": "max"
+      }
+     },
+     {
+      "op": "submit",
+      "run": "p1",
+      "spec": {
+       "group": "g",
+       "queue": "max"
+      }
+     },
+     {
+      "op": "submit",
+      "run": "p2",
+      "spec": {
+       "group": "g",
+       "queue": "max"
+      }
+     },
+     {
+      "op": "submit",
+      "run": "p3",
+      "spec": {
+       "group": "g",
+       "queue": "max"
+      }
+     },
+     {
+      "op": "submit",
+      "run": "p4",
+      "spec": {
+       "group": "g",
+       "queue": "max"
+      }
+     },
+     {
+      "op": "submit",
+      "run": "p5",
+      "spec": {
+       "group": "g",
+       "queue": "max"
+      }
+     },
+     {
+      "op": "submit",
+      "run": "p6",
+      "spec": {
+       "group": "g",
+       "queue": "max"
+      }
+     },
+     {
+      "op": "submit",
+      "run": "p7",
+      "spec": {
+       "group": "g",
+       "queue": "max"
+      }
+     },
+     {
+      "op": "submit",
+      "run": "p8",
+      "spec": {
+       "group": "g",
+       "queue": "max"
+      }
+     },
+     {
+      "op": "submit",
+      "run": "p9",
+      "spec": {
+       "group": "g",
+       "queue": "max"
+      }
+     },
+     {
+      "op": "submit",
+      "run": "p10",
+      "spec": {
+       "group": "g",
+       "queue": "max"
+      }
+     },
+     {
+      "op": "submit",
+      "run": "p11",
+      "spec": {
+       "group": "g",
+       "queue": "max"
+      }
+     },
+     {
+      "op": "submit",
+      "run": "p12",
+      "spec": {
+       "group": "g",
+       "queue": "max"
+      }
+     },
+     {
+      "op": "submit",
+      "run": "p13",
+      "spec": {
+       "group": "g",
+       "queue": "max"
+      }
+     },
+     {
+      "op": "submit",
+      "run": "p14",
+      "spec": {
+       "group": "g",
+       "queue": "max"
+      }
+     },
+     {
+      "op": "submit",
+      "run": "p15",
+      "spec": {
+       "group": "g",
+       "queue": "max"
+      }
+     },
+     {
+      "op": "submit",
+      "run": "p16",
+      "spec": {
+       "group": "g",
+       "queue": "max"
+      }
+     },
+     {
+      "op": "submit",
+      "run": "p17",
+      "spec": {
+       "group": "g",
+       "queue": "max"
+      }
+     },
+     {
+      "op": "submit",
+      "run": "p18",
+      "spec": {
+       "group": "g",
+       "queue": "max"
+      }
+     },
+     {
+      "op": "submit",
+      "run": "p19",
+      "spec": {
+       "group": "g",
+       "queue": "max"
+      }
+     },
+     {
+      "op": "submit",
+      "run": "p20",
+      "spec": {
+       "group": "g",
+       "queue": "max"
+      }
+     },
+     {
+      "op": "submit",
+      "run": "p21",
+      "spec": {
+       "group": "g",
+       "queue": "max"
+      }
+     },
+     {
+      "op": "submit",
+      "run": "p22",
+      "spec": {
+       "group": "g",
+       "queue": "max"
+      }
+     },
+     {
+      "op": "submit",
+      "run": "p23",
+      "spec": {
+       "group": "g",
+       "queue": "max"
+      }
+     },
+     {
+      "op": "submit",
+      "run": "p24",
+      "spec": {
+       "group": "g",
+       "queue": "max"
+      }
+     },
+     {
+      "op": "submit",
+      "run": "p25",
+      "spec": {
+       "group": "g",
+       "queue": "max"
+      }
+     },
+     {
+      "op": "submit",
+      "run": "p26",
+      "spec": {
+       "group": "g",
+       "queue": "max"
+      }
+     },
+     {
+      "op": "submit",
+      "run": "p27",
+      "spec": {
+       "group": "g",
+       "queue": "max"
+      }
+     },
+     {
+      "op": "submit",
+      "run": "p28",
+      "spec": {
+       "group": "g",
+       "queue": "max"
+      }
+     },
+     {
+      "op": "submit",
+      "run": "p29",
+      "spec": {
+       "group": "g",
+       "queue": "max"
+      }
+     },
+     {
+      "op": "submit",
+      "run": "p30",
+      "spec": {
+       "group": "g",
+       "queue": "max"
+      }
+     },
+     {
+      "op": "submit",
+      "run": "p31",
+      "spec": {
+       "group": "g",
+       "queue": "max"
+      }
+     },
+     {
+      "op": "submit",
+      "run": "p32",
+      "spec": {
+       "group": "g",
+       "queue": "max"
+      }
+     },
+     {
+      "op": "submit",
+      "run": "p33",
+      "spec": {
+       "group": "g",
+       "queue": "max"
+      }
+     },
+     {
+      "op": "submit",
+      "run": "p34",
+      "spec": {
+       "group": "g",
+       "queue": "max"
+      }
+     },
+     {
+      "op": "submit",
+      "run": "p35",
+      "spec": {
+       "group": "g",
+       "queue": "max"
+      }
+     },
+     {
+      "op": "submit",
+      "run": "p36",
+      "spec": {
+       "group": "g",
+       "queue": "max"
+      }
+     },
+     {
+      "op": "submit",
+      "run": "p37",
+      "spec": {
+       "group": "g",
+       "queue": "max"
+      }
+     },
+     {
+      "op": "submit",
+      "run": "p38",
+      "spec": {
+       "group": "g",
+       "queue": "max"
+      }
+     },
+     {
+      "op": "submit",
+      "run": "p39",
+      "spec": {
+       "group": "g",
+       "queue": "max"
+      }
+     },
+     {
+      "op": "submit",
+      "run": "p40",
+      "spec": {
+       "group": "g",
+       "queue": "max"
+      }
+     },
+     {
+      "op": "submit",
+      "run": "p41",
+      "spec": {
+       "group": "g",
+       "queue": "max"
+      }
+     },
+     {
+      "op": "submit",
+      "run": "p42",
+      "spec": {
+       "group": "g",
+       "queue": "max"
+      }
+     },
+     {
+      "op": "submit",
+      "run": "p43",
+      "spec": {
+       "group": "g",
+       "queue": "max"
+      }
+     },
+     {
+      "op": "submit",
+      "run": "p44",
+      "spec": {
+       "group": "g",
+       "queue": "max"
+      }
+     },
+     {
+      "op": "submit",
+      "run": "p45",
+      "spec": {
+       "group": "g",
+       "queue": "max"
+      }
+     },
+     {
+      "op": "submit",
+      "run": "p46",
+      "spec": {
+       "group": "g",
+       "queue": "max"
+      }
+     },
+     {
+      "op": "submit",
+      "run": "p47",
+      "spec": {
+       "group": "g",
+       "queue": "max"
+      }
+     },
+     {
+      "op": "submit",
+      "run": "p48",
+      "spec": {
+       "group": "g",
+       "queue": "max"
+      }
+     },
+     {
+      "op": "submit",
+      "run": "p49",
+      "spec": {
+       "group": "g",
+       "queue": "max"
+      }
+     },
+     {
+      "op": "submit",
+      "run": "p50",
+      "spec": {
+       "group": "g",
+       "queue": "max"
+      }
+     },
+     {
+      "op": "submit",
+      "run": "p51",
+      "spec": {
+       "group": "g",
+       "queue": "max"
+      }
+     },
+     {
+      "op": "submit",
+      "run": "p52",
+      "spec": {
+       "group": "g",
+       "queue": "max"
+      }
+     },
+     {
+      "op": "submit",
+      "run": "p53",
+      "spec": {
+       "group": "g",
+       "queue": "max"
+      }
+     },
+     {
+      "op": "submit",
+      "run": "p54",
+      "spec": {
+       "group": "g",
+       "queue": "max"
+      }
+     },
+     {
+      "op": "submit",
+      "run": "p55",
+      "spec": {
+       "group": "g",
+       "queue": "max"
+      }
+     },
+     {
+      "op": "submit",
+      "run": "p56",
+      "spec": {
+       "group": "g",
+       "queue": "max"
+      }
+     },
+     {
+      "op": "submit",
+      "run": "p57",
+      "spec": {
+       "group": "g",
+       "queue": "max"
+      }
+     },
+     {
+      "op": "submit",
+      "run": "p58",
+      "spec": {
+       "group": "g",
+       "queue": "max"
+      }
+     },
+     {
+      "op": "submit",
+      "run": "p59",
+      "spec": {
+       "group": "g",
+       "queue": "max"
+      }
+     },
+     {
+      "op": "submit",
+      "run": "p60",
+      "spec": {
+       "group": "g",
+       "queue": "max"
+      }
+     },
+     {
+      "op": "submit",
+      "run": "p61",
+      "spec": {
+       "group": "g",
+       "queue": "max"
+      }
+     },
+     {
+      "op": "submit",
+      "run": "p62",
+      "spec": {
+       "group": "g",
+       "queue": "max"
+      }
+     },
+     {
+      "op": "submit",
+      "run": "p63",
+      "spec": {
+       "group": "g",
+       "queue": "max"
+      }
+     },
+     {
+      "op": "submit",
+      "run": "p64",
+      "spec": {
+       "group": "g",
+       "queue": "max"
+      }
+     },
+     {
+      "op": "submit",
+      "run": "p65",
+      "spec": {
+       "group": "g",
+       "queue": "max"
+      }
+     },
+     {
+      "op": "submit",
+      "run": "p66",
+      "spec": {
+       "group": "g",
+       "queue": "max"
+      }
+     },
+     {
+      "op": "submit",
+      "run": "p67",
+      "spec": {
+       "group": "g",
+       "queue": "max"
+      }
+     },
+     {
+      "op": "submit",
+      "run": "p68",
+      "spec": {
+       "group": "g",
+       "queue": "max"
+      }
+     },
+     {
+      "op": "submit",
+      "run": "p69",
+      "spec": {
+       "group": "g",
+       "queue": "max"
+      }
+     },
+     {
+      "op": "submit",
+      "run": "p70",
+      "spec": {
+       "group": "g",
+       "queue": "max"
+      }
+     },
+     {
+      "op": "submit",
+      "run": "p71",
+      "spec": {
+       "group": "g",
+       "queue": "max"
+      }
+     },
+     {
+      "op": "submit",
+      "run": "p72",
+      "spec": {
+       "group": "g",
+       "queue": "max"
+      }
+     },
+     {
+      "op": "submit",
+      "run": "p73",
+      "spec": {
+       "group": "g",
+       "queue": "max"
+      }
+     },
+     {
+      "op": "submit",
+      "run": "p74",
+      "spec": {
+       "group": "g",
+       "queue": "max"
+      }
+     },
+     {
+      "op": "submit",
+      "run": "p75",
+      "spec": {
+       "group": "g",
+       "queue": "max"
+      }
+     },
+     {
+      "op": "submit",
+      "run": "p76",
+      "spec": {
+       "group": "g",
+       "queue": "max"
+      }
+     },
+     {
+      "op": "submit",
+      "run": "p77",
+      "spec": {
+       "group": "g",
+       "queue": "max"
+      }
+     },
+     {
+      "op": "submit",
+      "run": "p78",
+      "spec": {
+       "group": "g",
+       "queue": "max"
+      }
+     },
+     {
+      "op": "submit",
+      "run": "p79",
+      "spec": {
+       "group": "g",
+       "queue": "max"
+      }
+     },
+     {
+      "op": "submit",
+      "run": "p80",
+      "spec": {
+       "group": "g",
+       "queue": "max"
+      }
+     },
+     {
+      "op": "submit",
+      "run": "p81",
+      "spec": {
+       "group": "g",
+       "queue": "max"
+      }
+     },
+     {
+      "op": "submit",
+      "run": "p82",
+      "spec": {
+       "group": "g",
+       "queue": "max"
+      }
+     },
+     {
+      "op": "submit",
+      "run": "p83",
+      "spec": {
+       "group": "g",
+       "queue": "max"
+      }
+     },
+     {
+      "op": "submit",
+      "run": "p84",
+      "spec": {
+       "group": "g",
+       "queue": "max"
+      }
+     },
+     {
+      "op": "submit",
+      "run": "p85",
+      "spec": {
+       "group": "g",
+       "queue": "max"
+      }
+     },
+     {
+      "op": "submit",
+      "run": "p86",
+      "spec": {
+       "group": "g",
+       "queue": "max"
+      }
+     },
+     {
+      "op": "submit",
+      "run": "p87",
+      "spec": {
+       "group": "g",
+       "queue": "max"
+      }
+     },
+     {
+      "op": "submit",
+      "run": "p88",
+      "spec": {
+       "group": "g",
+       "queue": "max"
+      }
+     },
+     {
+      "op": "submit",
+      "run": "p89",
+      "spec": {
+       "group": "g",
+       "queue": "max"
+      }
+     },
+     {
+      "op": "submit",
+      "run": "p90",
+      "spec": {
+       "group": "g",
+       "queue": "max"
+      }
+     },
+     {
+      "op": "submit",
+      "run": "p91",
+      "spec": {
+       "group": "g",
+       "queue": "max"
+      }
+     },
+     {
+      "op": "submit",
+      "run": "p92",
+      "spec": {
+       "group": "g",
+       "queue": "max"
+      }
+     },
+     {
+      "op": "submit",
+      "run": "p93",
+      "spec": {
+       "group": "g",
+       "queue": "max"
+      }
+     },
+     {
+      "op": "submit",
+      "run": "p94",
+      "spec": {
+       "group": "g",
+       "queue": "max"
+      }
+     },
+     {
+      "op": "submit",
+      "run": "p95",
+      "spec": {
+       "group": "g",
+       "queue": "max"
+      }
+     },
+     {
+      "op": "submit",
+      "run": "p96",
+      "spec": {
+       "group": "g",
+       "queue": "max"
+      }
+     },
+     {
+      "op": "submit",
+      "run": "p97",
+      "spec": {
+       "group": "g",
+       "queue": "max"
+      }
+     },
+     {
+      "op": "submit",
+      "run": "p98",
+      "spec": {
+       "group": "g",
+       "queue": "max"
+      }
+     },
+     {
+      "op": "submit",
+      "run": "p99",
+      "spec": {
+       "group": "g",
+       "queue": "max"
+      }
+     },
+     {
+      "op": "submit",
+      "run": "p100",
+      "spec": {
+       "group": "g",
+       "queue": "max"
+      }
+     },
+     {
+      "op": "submit",
+      "run": "p101",
+      "spec": {
+       "group": "g",
+       "queue": "max"
+      }
+     }
+    ]
+   },
+   "id": "K6-queue-max-cancels-the-run-past-one-hundred-pending",
+   "kind": "scenario",
+   "rules": [
+    "K6"
+   ]
+  },
+  {
+   "expect": {
+    "effects": [
+     [
+      "r1",
+      "running"
+     ],
+     [
+      "r2",
+      "pending"
+     ],
+     [
+      "r2",
+      "canceled"
+     ],
+     [
+      "r3",
+      "pending"
+     ]
+    ],
+    "groups": {
+     "r/r#g": {
+      "pending": [
+       "r3"
+      ],
+      "running": [
+       "r1"
+      ]
+     }
+    }
+   },
+   "given": {
+    "flags": [
+     "actions-nga"
+    ],
+    "steps": [
+     {
+      "op": "submit",
+      "run": "r1",
+      "spec": {
+       "group": "g",
+       "queue": "single"
+      }
+     },
+     {
+      "op": "submit",
+      "run": "r2",
+      "spec": {
+       "group": "g",
+       "queue": "single"
+      }
+     },
+     {
+      "op": "submit",
+      "run": "r3",
+      "spec": {
+       "group": "g",
+       "queue": "single"
+      }
+     }
+    ]
+   },
+   "id": "K6-queue-single-still-replaces",
+   "kind": "scenario",
+   "rules": [
+    "K6",
+    "K4"
+   ]
+  },
+  {
+   "expect": {
+    "effects": [
+     [
+      "r1",
+      "running"
+     ],
+     [
+      "r1",
+      "completed"
+     ],
+     [
+      "r2",
+      "running"
+     ]
+    ],
+    "groups": {
+     "r/r#g": {
+      "pending": [],
+      "running": [
+       "r2"
+      ]
+     }
+    }
+   },
+   "given": {
+    "steps": [
+     {
+      "op": "submit",
+      "run": "r1",
+      "spec": "g"
+     },
+     {
+      "op": "finish",
+      "run": "r1"
+     },
+     {
+      "op": "submit",
+      "run": "r2",
+      "spec": "g"
+     }
+    ]
+   },
+   "id": "K8-finish-without-pending-frees-the-group",
+   "kind": "scenario",
+   "rules": [
+    "K8",
+    "K2"
+   ]
+  },
+  {
+   "expect": {
+    "error": "run zz is not running in any concurrency group of r/r"
+   },
+   "given": {
+    "steps": [
+     {
+      "op": "submit",
+      "run": "r1",
+      "spec": "g"
+     },
+     {
+      "op": "finish",
+      "run": "zz"
+     }
+    ]
+   },
+   "id": "K2-finish-of-a-run-that-is-not-running-is-an-error",
+   "kind": "scenario",
+   "rules": [
+    "K2"
+   ]
+  },
+  {
+   "expect": {
+    "effects": [
+     [
+      "receipt-head-a",
+      "running"
+     ],
+     [
+      "receipt-head-a",
+      "canceled"
+     ],
+     [
+      "receipt-head-b",
+      "running"
+     ],
+     [
+      "receipt-other-pr",
+      "running"
+     ]
+    ],
+    "groups": {
+     "r/r#agent-receipt-7": {
+      "pending": [],
+      "running": [
+       "receipt-head-b"
+      ]
+     },
+     "r/r#agent-receipt-8": {
+      "pending": [],
+      "running": [
+       "receipt-other-pr"
+      ]
+     }
+    }
+   },
+   "given": {
+    "steps": [
+     {
+      "op": "submit",
+      "run": "receipt-head-a",
+      "spec": {
+       "cancel-in-progress": true,
+       "group": "agent-receipt-7"
+      }
+     },
+     {
+      "op": "submit",
+      "run": "receipt-head-b",
+      "spec": {
+       "cancel-in-progress": true,
+       "group": "agent-receipt-7"
+      }
+     },
+     {
+      "op": "submit",
+      "run": "receipt-other-pr",
+      "spec": {
+       "cancel-in-progress": true,
+       "group": "agent-receipt-8"
+      }
+     }
+    ]
+   },
+   "id": "K5-receipt-job-new-head-cancels-the-older-receipt-run",
+   "kind": "scenario",
+   "rules": [
+    "K5",
+    "K1"
+   ]
+  }
+ ],
+ "schema": "ges.concurrency-semantics-conformance.v1"
+}
