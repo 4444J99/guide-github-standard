@@ -149,6 +149,21 @@ producing step must not take its content from untrusted PR text.
 
 Outputs: `receipt-id`.
 
+## Observed runs of the action
+
+On 2026-11-14 the action was run at commit `e361829` through `act` 0.2.94 in host mode (not a
+GitHub-hosted runner) against a real pull request in a private scratch repository, with real `gh api`
+reads and writes: `uses:` resolution of the action from `4444J99/guide-github-standard` at the
+pinned SHA, the `../../../ges/receipts.py` path from `github.action_path`, insertion into a body that
+a review bot had already extended (the bot text was preserved), an idempotent second run (body hash
+unchanged), refusal of a receipt whose head SHA was stale after a new push, and replacement of the
+block by a fresh receipt for the new head (one block remained). The hosted run of the same workflow
+did not start: the job ended in 3 seconds with zero steps and a provider annotation that it was not started for an
+account-level reason, not a workflow error. Behaviour
+specific to GitHub-hosted runners (the `github.token` default, `GITHUB_OUTPUT` handling, token
+permissions per the [token semantics](github-token-permission-semantics.md)) therefore remains
+unobserved.
+
 ## Limits
 
 Concurrent edits to the PR description between the read and the write can still be

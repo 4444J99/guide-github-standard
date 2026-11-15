@@ -69,7 +69,7 @@ python -m ges token-semantics verify --sources PINNED_DOCS_CHECKOUT
 python -m ges token-semantics build  --sources PINNED_DOCS_CHECKOUT [--output DIR]
 ```
 
-`build` and `verify` need the nine pinned files laid out as in the `github/docs`
+`build` and `verify` need the ten pinned files laid out as in the `github/docs`
 checkout; `verify` rebuilds the ledger and fails on any difference, so a changed
 content digest, a moved line range or a missing anchor phrase is reported. CI exercises
 the same code on a synthetic source (`tests/test_token_semantics.py`); the real files
