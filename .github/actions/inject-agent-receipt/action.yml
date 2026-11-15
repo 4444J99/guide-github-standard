@@ -37,6 +37,7 @@ runs:
       run: |
         set -euo pipefail
         fail() { echo "::error title=agent-receipt::$1"; exit 1; }
+        [ -n "$GH_TOKEN" ] || fail "github-token is empty; refusing to fall back to whatever credential gh finds on the runner"
         [ "$EVENT_NAME" != "pull_request_target" ] || fail "pull_request_target is refused: the receipt would come from an untrusted context"
         pr="${INPUT_PR:-$EVENT_PR}"
         case "$pr" in ''|*[!0-9]*) fail "pull-request-number is missing or not numeric" ;; esac
