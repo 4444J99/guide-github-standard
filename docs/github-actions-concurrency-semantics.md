@@ -51,7 +51,7 @@ apply, the text states one running and one pending run (the same default), and t
 
 ## Conformance
 
-`evidence/semantics/github-actions-concurrency/conformance.json` holds 35 cases: value validation,
+`evidence/semantics/github-actions-concurrency/conformance.json` holds 41 cases: value validation,
 expression contexts, `head_ref` fallbacks and run scenarios (submit and finish sequences with the
 expected status changes and final group state). `check_conformance` fails when the model disagrees
 with a case, when a case cites a rule no source statement supports, and when a rule the sources
@@ -74,8 +74,9 @@ the same code on a synthetic source; the real files are not vendored.
 Asserted in tests against the workflow block in `docs/agent-verification-receipts.md`: its group
 expression uses only `github`, is valid at job level, and with `cancel-in-progress: true` a run for a
 newer head cancels the earlier run of the same pull request while a run for another pull request is
-untouched. That is what keeps a stale receipt run from writing after a newer one has started, on top
-of the head-SHA binding the action itself enforces.
+untouched. Cancellation stops the canceled run in stages and does not fence a write request that was
+already sent, so a stale receipt run can still write after a newer one has started; the model does not
+establish otherwise. The head-SHA binding the action itself enforces is a separate control.
 
 ## Ambiguities preserved
 

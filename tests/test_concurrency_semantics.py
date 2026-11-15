@@ -71,6 +71,20 @@ class Model(unittest.TestCase):
         with self.assertRaises(ValueError):
             cs.check_group_expression('x', 'step')
 
+    def test_validation_and_submission_reject_the_same_invalid_groups(self):
+        for group in (None, '', '   ', 5):
+            with self.assertRaises(ValueError):
+                cs.validate_concurrency({'group': group})
+            with self.assertRaises(ValueError):
+                cs.submit(cs.new_world(), 'r1', {'group': group})
+
+    def test_unterminated_expression_and_escaped_quotes(self):
+        with self.assertRaisesRegex(ValueError, 'unterminated'):
+            cs.check_group_expression('${{ github.ref', 'workflow')
+        with self.assertRaises(ValueError):
+            cs.check_group_expression("${{ format('it''s }}', needs.a.x) }}", 'workflow')
+        cs.check_group_expression("${{ format('it''s }}', github.ref) }}", 'workflow')
+
     def test_queue_overflow_is_exactly_one_hundred(self):
         world, spec = cs.new_world(), {'group': 'g', 'queue': 'max'}
         for n in range(1 + cs.MAX_PENDING):
@@ -174,6 +188,7 @@ class LedgerBuild(unittest.TestCase):
                        for a in r['ambiguities']]
         self.assertTrue(any('contradicts the example' in a for a in ambiguities))
         self.assertTrue(any('strict FIFO' in a for a in ambiguities))
+        self.assertTrue(any('only when cancel-in-progress is true' in a for a in ambiguities))
 
     def synthetic(self):
         directory = tempfile.TemporaryDirectory()

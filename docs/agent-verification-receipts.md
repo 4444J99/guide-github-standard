@@ -153,7 +153,8 @@ Outputs: `receipt-id`.
 
 On 2026-11-14 the action was run at commit `e361829` through `act` 0.2.94 in host mode (not a
 GitHub-hosted runner) against a real pull request in a private scratch repository, with real `gh api`
-reads and writes: `uses:` resolution of the action from `4444J99/guide-github-standard` at the
+reads and writes made under the operator's stored `gh` login (`act` supplied no job token, so `GH_TOKEN`
+was empty and `gh` fell back to its stored credential; the action now refuses an empty token): `uses:` resolution of the action from `4444J99/guide-github-standard` at the
 pinned SHA, the `../../../ges/receipts.py` path from `github.action_path`, insertion into a body that
 a review bot had already extended (the bot text was preserved), an idempotent second run (body hash
 unchanged), refusal of a receipt whose head SHA was stale after a new push, and replacement of the

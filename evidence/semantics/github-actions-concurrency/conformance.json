@@ -127,6 +127,36 @@
   },
   {
    "expect": {
+    "error": "concurrency group must be a non-empty string"
+   },
+   "given": {
+    "spec": {
+     "group": "   "
+    }
+   },
+   "id": "K1-validate-rejects-blank-group",
+   "kind": "validate",
+   "rules": [
+    "K1"
+   ]
+  },
+  {
+   "expect": {
+    "error": "concurrency group must be a non-empty string"
+   },
+   "given": {
+    "spec": {
+     "group": null
+    }
+   },
+   "id": "K1-validate-rejects-null-group",
+   "kind": "validate",
+   "rules": [
+    "K1"
+   ]
+  },
+  {
+   "expect": {
     "error": "cancel-in-progress must be evaluated to a boolean first"
    },
    "given": {
@@ -248,6 +278,62 @@
     "level": "workflow"
    },
    "id": "K10-context-name-inside-string-literal-ignored",
+   "kind": "expression",
+   "rules": [
+    "K10"
+   ]
+  },
+  {
+   "expect": {
+    "error": "context needs is not allowed in a workflow-level concurrency group"
+   },
+   "given": {
+    "expression": "${{ toJSON(needs) }}",
+    "level": "workflow"
+   },
+   "id": "K10-whole-context-argument-is-checked",
+   "kind": "expression",
+   "rules": [
+    "K10"
+   ]
+  },
+  {
+   "expect": {
+    "allowed": true
+   },
+   "given": {
+    "expression": "${{ toJSON(github) }}",
+    "level": "workflow"
+   },
+   "id": "K10-allowed-whole-context-argument",
+   "kind": "expression",
+   "rules": [
+    "K10"
+   ]
+  },
+  {
+   "expect": {
+    "error": "context needs is not allowed in a workflow-level concurrency group"
+   },
+   "given": {
+    "expression": "${{ format('}}{0}', needs.build.outputs.group) }}",
+    "level": "workflow"
+   },
+   "id": "K10-closing-braces-inside-a-string-do-not-end-the-expression",
+   "kind": "expression",
+   "rules": [
+    "K10"
+   ]
+  },
+  {
+   "expect": {
+    "allowed": true
+   },
+   "given": {
+    "expression": "${{ github.ref }}-${{ format(github.run_id) }}",
+    "level": "workflow"
+   },
+   "id": "K10-function-named-like-a-context-is-not-a-context",
    "kind": "expression",
    "rules": [
     "K10"

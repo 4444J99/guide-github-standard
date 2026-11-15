@@ -47,9 +47,28 @@ JOB_CONTEXTS = WORKFLOW_CONTEXTS | {'needs', 'strategy', 'matrix'}
 KNOWN_CONTEXTS = frozenset({'github', 'env', 'vars', 'job', 'jobs', 'steps', 'runner', 'secrets',
                             'strategy', 'matrix', 'needs', 'inputs'})
 
-_EXPRESSION = re.compile(r'\$\{\{(.*?)\}\}', re.S)
 _STRING = re.compile(r"'(?:[^']|'')*'")
-_NAME = re.compile(r'(?<![\w.\-])([A-Za-z_][\w\-]*)(?=\s*[.\[])')
+# A context reference: a known context name that is not a property tail (`.x`), part of a longer
+# identifier, or a function name (followed by `(`).
+_CONTEXT = re.compile(r'(?<![\w.\-])(' + '|'.join(sorted(KNOWN_CONTEXTS)) + r')(?![\w\-]|\s*\()')
+
+
+def expression_bodies(text: str) -> list[str]:
+    """Bodies of every `${{ ... }}` in text; a `}}` inside a single-quoted string does not end one."""
+    bodies, position = [], 0
+    while (start := text.find('${{', position)) != -1:
+        index, quoted = start + 3, False
+        while index < len(text):
+            if text[index] == "'":
+                quoted = not quoted  # '' inside a string toggles twice, so it stays quoted
+            elif not quoted and text.startswith('}}', index):
+                break
+            index += 1
+        else:
+            raise ValueError('unterminated ${{ expression in concurrency group')
+        bodies.append(text[start + 3:index])
+        position = index + 2
+    return bodies
 
 
 def group_key(repository: str, group: str) -> str:
@@ -69,6 +88,7 @@ def validate_concurrency(spec: object, flags: frozenset[str] = frozenset()) -> d
         spec = {'group': spec}
     if not isinstance(spec, dict) or 'group' not in spec:
         raise ValueError('concurrency requires a group')
+    group_key('r/r', spec['group'])  # same non-empty string check submit applies
     unknown = sorted(set(spec) - {'group', 'cancel-in-progress', 'queue'})
     if unknown:
         raise ValueError(f'unsupported concurrency key {unknown[0]}')
@@ -91,9 +111,9 @@ def check_group_expression(expression: str, level: str) -> None:
     if level not in ('workflow', 'job'):
         raise ValueError('level must be workflow or job')
     allowed = WORKFLOW_CONTEXTS if level == 'workflow' else JOB_CONTEXTS
-    for body in _EXPRESSION.findall(expression):
-        for name in _NAME.findall(_STRING.sub("''", body)):
-            if name in KNOWN_CONTEXTS and name not in allowed:
+    for body in expression_bodies(expression):
+        for name in _CONTEXT.findall(_STRING.sub("''", body)):
+            if name not in allowed:
                 raise ValueError(f'context {name} is not allowed in a {level}-level concurrency group')
 
 

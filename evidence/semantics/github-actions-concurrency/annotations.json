@@ -715,8 +715,10 @@
    "path": "data/reusables/actions/actions-group-concurrency.md",
    "propositions": [
     {
-     "ambiguities": [],
-     "formalization": "CONSTRAINT: a group is keyed by repository and name, not by workflow; two workflows with one group name share it and cancel each other unless the name includes github.workflow.",
+     "ambiguities": [
+      "The object text states unconditional cancellation of an in-progress job; in-progress cancellation applies only when cancel-in-progress is true."
+     ],
+     "formalization": "CONSTRAINT: a group is keyed by repository and name, not by workflow; two workflows with one group name share it. A newer run replaces an older pending run in that group; an in-progress run is canceled only when its workflow sets cancel-in-progress: true. Including github.workflow in the group name keeps workflows apart.",
      "preserved_differences": [],
      "rules": [
       "K11"
