@@ -1,5 +1,14 @@
 # Changelog
 
+## Unreleased
+
+- Added a purpose-specific, local-only repository scaffolder with explicit spec,
+  draft-profile and artifact-catalog inputs; input-digest locks; truthful
+  generation manifests; and documented LICENSE, `.gitignore`, CI, build/package
+  and native-enforcement exclusions. Locks identify the generator version and
+  source-module digests. Generation does not create a Git repository or remote,
+  adopt policy, assess compliance or apply GitHub settings.
+
 ## 0.1.0 — 2026-10-01
 
 Initial six-source pinned acquisition, candidate and page ledgers, 95 reviewed-draft controls, 22 templates, six draft profiles, read-only collection, assessment, human attestations, exceptions, gates, compilation, change-impact analysis and false-pass regression tests. Native enforcement and exhaustive semantic review remain open.
@@ -35,3 +44,5 @@ See `evidence/recovery-status.json` for measured construction status and
 ## Unreleased
 
 Phase 1 (secrets & supply chain) warn-only package: reusable `phase1-warn.yml`, `standards/phase1/` checks, pass/fail fixtures, and `docs/phase1-warn-only.md`. No required checks or ruleset changes.
+
+Agent verification receipts: `ges.agent-verification-receipt.v1` schema, stdlib validator (`python -m ges receipt ...`), valid/invalid fixtures, and the `inject-agent-receipt` composite action; see `docs/agent-verification-receipts.md`. No required checks or ruleset changes.

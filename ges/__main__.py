@@ -1,12 +1,14 @@
 from __future__ import annotations
+
 import argparse
 import json
 import sys
 from pathlib import Path
-from .core import ROOT,dump,load,validate_controls
-from .corpus import build_corpus,coverage_with_reviews,impact
-from .evaluate import audit,gate
-from .render import generate,render_template
+
+from .core import ROOT, digest, dump, load, validate_controls
+from .corpus import build_corpus, coverage_with_reviews, impact
+from .evaluate import audit, gate
+from .render import generate, render_template
 
 
 def main(argv=None):
@@ -15,6 +17,12 @@ def main(argv=None):
     sub=p.add_subparsers(dest='command',required=True)
     from .semantics import configure_parser
     configure_parser(sub)
+    from .receipts import configure_parser as configure_receipts
+    configure_receipts(sub)
+    from .token_semantics import configure_parser as configure_token_semantics
+    configure_token_semantics(sub)
+    from .concurrency_semantics import configure_parser as configure_concurrency_semantics
+    configure_concurrency_semantics(sub)
     c=sub.add_parser('branch-checks', help='Read-only exact-revision required-check observation; no enforcement certification')
     c.add_argument('--snapshot',type=Path,required=True); c.add_argument('--profile',type=Path,required=True)
     c.add_argument('--revision',required=True); c.add_argument('--revision-kind',choices=['head','test_merge','merge_group'],required=True)
@@ -31,6 +39,10 @@ def main(argv=None):
     c=sub.add_parser('gate'); c.add_argument('--report',type=Path,required=True); c.add_argument('--allow-exceptions',action='store_true')
     c.add_argument('--require-accepted',action='store_true'); c.add_argument('--enforce-should',action='store_true')
     c=sub.add_parser('render'); c.add_argument('--template',required=True); c.add_argument('--parameters',type=Path,required=True); c.add_argument('--output',type=Path,required=True)
+    c=sub.add_parser('scaffold',help='build a purpose-specific local repository without creating a GitHub remote')
+    c.add_argument('--spec',type=Path,required=True); c.add_argument('--profile',type=Path,required=True)
+    c.add_argument('--artifacts',type=Path,default=ROOT/'factory/artifacts.json'); c.add_argument('--output',type=Path,required=True)
+    c.add_argument('--dry-run',action='store_true',help='validate and print the generation manifest without writing files')
     c=sub.add_parser('impact'); c.add_argument('--old',type=Path,required=True); c.add_argument('--new',type=Path,required=True); c.add_argument('--output',type=Path,required=True)
     c.add_argument('--dependencies',type=Path,help='Old pinned dependency ledger for conservative transitive invalidation')
     c=sub.add_parser('collect'); c.add_argument('--repository',required=True); c.add_argument('--output',type=Path,required=True); c.add_argument('--max-files',type=int,default=2000)
@@ -44,6 +56,15 @@ def main(argv=None):
         report=assess(load(args.snapshot),load(args.profile),args.revision,args.revision_kind)
         dump(args.output,report); print(json.dumps(report['summary'],indent=2))
         return 0 if report['observed_checks_pass'] else 1
+    if args.command == 'token-semantics':
+        from .token_semantics import run as run_token_semantics
+        return run_token_semantics(args)
+    if args.command == 'concurrency-semantics':
+        from .concurrency_semantics import run as run_concurrency_semantics
+        return run_concurrency_semantics(args)
+    if args.command == 'receipt':
+        from .receipts import run as run_receipt
+        return run_receipt(args)
     if args.command == 'semantics':
         from .semantics import run
         return run(args)
@@ -78,6 +99,18 @@ def main(argv=None):
         ok,reasons=gate(load(args.report),allow_exceptions=args.allow_exceptions,require_accepted=args.require_accepted,enforce_should=args.enforce_should,expected_controls=controls)
         print(json.dumps({'pass':ok,'blockers':reasons},indent=2)); return 0 if ok else 1
     elif args.command=='render': render_template(ROOT,args.template,load(args.parameters),args.output)
+    elif args.command=='scaffold':
+        from .scaffold import plan_scaffold, write_scaffold
+        plan=plan_scaffold(ROOT,controls,load(args.spec),load(args.profile),load(args.artifacts))
+        if args.dry_run:
+            print(json.dumps({'dry_run':True,'would_create':str(args.output),'manifest':plan.manifest},indent=2))
+        else:
+            write_scaffold(plan,args.output)
+            print(json.dumps({'created':str(args.output),'files':len(plan.files),
+                              'materialized_artifacts':len(plan.manifest['artifacts']['materialized']),
+                              'omitted_artifacts':len(plan.manifest['artifacts']['omitted']),
+                              'manifest_digest':digest(plan.manifest),
+                              'native_changes_applied':False},indent=2))
     elif args.command=='impact': dump(args.output,impact(args.old,args.new,controls,args.dependencies))
     elif args.command=='collect':
         from .collect import collect
