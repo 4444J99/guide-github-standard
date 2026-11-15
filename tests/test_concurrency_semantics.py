@@ -71,6 +71,15 @@ class Model(unittest.TestCase):
         with self.assertRaises(ValueError):
             cs.check_group_expression('x', 'step')
 
+    def test_standalone_context_references_are_checked(self):
+        # PR 513 review (Codex P2): a whole context passed to a function has no property tail.
+        for expression in ('${{ toJSON(needs) }}', '${{ needs }}', "${{ format('{0}', needs) }}"):
+            with self.subTest(expression=expression):
+                with self.assertRaisesRegex(ValueError, 'context needs is not allowed'):
+                    cs.check_group_expression(expression, 'workflow')
+        cs.check_group_expression('${{ toJSON(needs) }}', 'job')
+        cs.check_group_expression('${{ toJSON(github) }}', 'workflow')
+
     def test_validation_and_submission_reject_the_same_invalid_groups(self):
         for group in (None, '', '   ', 5):
             with self.assertRaises(ValueError):
