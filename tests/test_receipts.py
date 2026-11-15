@@ -265,6 +265,7 @@ class ActionScript(unittest.TestCase):
 import json, os, sys
 state = os.environ['FAKE_BODY']
 args = sys.argv[1:]
+open(state + '.calls', 'a').write(' '.join(args) + chr(10))
 if args[0] != 'api':
     sys.exit(9)
 if '-X' in args:
@@ -307,6 +308,15 @@ else:
         self.assertIn('receipt-id=' + self.receipt['id'], (self.dir / 'out.txt').read_text())
         self.assertEqual(self.run_action().returncode, 0)
         self.assertEqual(self.state.read_text(), body)
+
+    def test_empty_token_is_refused_before_any_gh_call(self):
+        # An empty github-token (for example a mistyped secret name) must not let gh fall back to a
+        # credential stored on the runner: the step fails visibly and calls nothing.
+        result = self.run_action(GH_TOKEN='')
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn('::error title=agent-receipt::github-token is empty', result.stdout)
+        self.assertFalse((self.state.parent / 'pr-body.txt.calls').exists())
+        self.assertEqual(self.state.read_text(), 'Existing description')
 
     def test_pull_request_target_is_refused(self):
         result = self.run_action(event='pull_request_target')

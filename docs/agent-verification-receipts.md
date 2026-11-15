@@ -140,9 +140,10 @@ Pin the action to a full commit SHA. The step:
 4. patches the body, then re-reads the PR and confirms the same receipt id is present and
    still binds to the PR's head at that moment (a push during the update fails the step).
 
-Failure is always visible: an invalid receipt, a read-only token (fork pull requests,
-or a job without `pull-requests: write`) and a lost update from a concurrent body edit
-each fail the step. Nothing is skipped silently. The action takes no inputs through
+Failure is always visible: an empty `github-token` (the step never falls back to a credential
+stored on the runner), an invalid receipt, a read-only token (fork pull requests,
+or a job without `pull-requests: write`) and a receipt lost to a concurrent body edit
+each fail the step (other text overwritten by the same race is not detected; see Limits). Nothing is skipped silently. The action takes no inputs through
 shell interpolation; values reach the script as environment variables. It has no
 third-party `uses:` dependencies. The receipt path is read from the workspace, so the
 producing step must not take its content from untrusted PR text.
