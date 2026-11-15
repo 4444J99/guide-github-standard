@@ -142,8 +142,8 @@ Pin the action to a full commit SHA. The step:
 
 Failure is always visible: an empty `github-token` (the step never falls back to a credential
 stored on the runner), an invalid receipt, a read-only token (fork pull requests,
-or a job without `pull-requests: write`) and a lost update from a concurrent body edit
-each fail the step. Nothing is skipped silently. The action takes no inputs through
+or a job without `pull-requests: write`) and a receipt lost to a concurrent body edit
+each fail the step (other text overwritten by the same race is not detected; see Limits). Nothing is skipped silently. The action takes no inputs through
 shell interpolation; values reach the script as environment variables. It has no
 third-party `uses:` dependencies. The receipt path is read from the workspace, so the
 producing step must not take its content from untrusted PR text.
