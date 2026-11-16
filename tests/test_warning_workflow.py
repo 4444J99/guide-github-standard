@@ -47,7 +47,7 @@ class WarningWorkflowTests(unittest.TestCase):
                        GITHUB_REPOSITORY='fixture/repo', GITHUB_RUN_ID='123', GITHUB_RUN_ATTEMPT='1',
                        GITHUB_STEP_SUMMARY=str(root/'summary'), SOURCE_REPOSITORY='fork/repo',
                        SOURCE_REPOSITORY_ID='2', GH_TOKEN='fixture-not-a-credential')
-            bootstrap = "import io, json, urllib.request\nfrom unittest.mock import patch\n" + "payload = " + repr(json.dumps(metadata if metadata is not None else {'referenced_workflows': [{'path':'4444J99/github-engineering-standards/.github/workflows/warning-pilot.yml@'+'b'*40,'sha':'b'*40}]}).encode()) + "\nwith patch('urllib.request.urlopen', return_value=io.BytesIO(payload)):\n    exec(" + repr(SCRIPT) + ")\n"
+            bootstrap = "import io, json, urllib.request\nfrom unittest.mock import patch\n" + "payload = " + repr(json.dumps(metadata if metadata is not None else {'referenced_workflows': [{'path':'4444J99/guide-github-standard/.github/workflows/warning-pilot.yml@'+'b'*40,'sha':'b'*40}]}).encode()) + "\nwith patch('urllib.request.urlopen', return_value=io.BytesIO(payload)):\n    exec(" + repr(SCRIPT) + ")\n"
             result = subprocess.run([sys.executable, '-c', bootstrap], cwd=ROOT, env=env,
                                     capture_output=True, text=True, timeout=30)
             data = {p.name: json.loads(p.read_text()) for p in (root/'evidence').glob('*.json')}
@@ -136,7 +136,7 @@ class WarningWorkflowTests(unittest.TestCase):
         self.assertTrue(all(f['status'] == 'NOT_VERIFIABLE' for f in data['report.json']['findings'][:2]))
 
     def test_missing_or_mutable_wrapper_binding_fails_visibly(self):
-        for metadata in ({}, {'referenced_workflows': [{'path': '4444J99/github-engineering-standards/.github/workflows/warning-pilot.yml@main', 'sha': 'b'*40}]}):
+        for metadata in ({}, {'referenced_workflows': [{'path': '4444J99/guide-github-standard/.github/workflows/warning-pilot.yml@main', 'sha': 'b'*40}]}):
             result, data = self.run_fixture(metadata=metadata)
             self.assertNotEqual(result.returncode, 0)
             self.assertNotIn('report.json', data)

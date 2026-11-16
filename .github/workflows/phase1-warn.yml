@@ -1,13 +1,13 @@
 # Phase 1 (secrets & supply chain) — reusable, WARN-ONLY.
 # Callers pin this workflow by commit SHA or an immutable tag, e.g.
-#   uses: 4444J99/github-engineering-standards/.github/workflows/phase1-warn.yml@<sha>
+#   uses: 4444J99/guide-github-standard/.github/workflows/phase1-warn.yml@<sha>
 # Nothing here fails a build unless the caller sets `enforce: true` (not part of the warn-only rollout).
 name: phase1-warn
 on:
   workflow_call:
     inputs:
       standards-ref:
-        description: Commit SHA of github-engineering-standards to load the checks from (use the same SHA you pinned above).
+        description: Commit SHA of guide-github-standard to load the checks from (use the same SHA you pinned above).
         type: string
         required: true
       needs-json:
@@ -35,7 +35,7 @@ jobs:
           path: target
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
-          repository: 4444J99/github-engineering-standards
+          repository: 4444J99/guide-github-standard
           ref: ${{ inputs.standards-ref }}
           persist-credentials: false
           path: ges
@@ -94,7 +94,7 @@ jobs:
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
-          repository: 4444J99/github-engineering-standards
+          repository: 4444J99/guide-github-standard
           ref: ${{ inputs.standards-ref }}
           persist-credentials: false
       - name: Aggregate (skipped, cancelled, failed or 0-step jobs are not green)
