@@ -43,7 +43,7 @@ jobs:
       - name: Read immutable inspector
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
-          repository: 4444J99/github-engineering-standards
+          repository: 4444J99/guide-github-standard
           ref: a5cdf48e9f255cb407a1ae69be62397f1151847d
           path: toolkit
           persist-credentials: false
@@ -173,10 +173,10 @@ jobs:
           if len(raw_run) > 1024 * 1024:
               raise ValueError('Run metadata exceeds 1 MiB')
           run = json.loads(raw_run)
-          wrappers = [w for w in run.get('referenced_workflows', []) if w.get('path', '').startswith('4444J99/github-engineering-standards/.github/workflows/warning-pilot.yml@')]
+          wrappers = [w for w in run.get('referenced_workflows', []) if w.get('path', '').startswith('4444J99/guide-github-standard/.github/workflows/warning-pilot.yml@')]
           if len(wrappers) != 1 or not re.fullmatch(r'[0-9a-f]{40}', wrappers[0].get('sha', '')):
               raise ValueError('Cannot bind invoked wrapper to GitHub run metadata')
-          if wrappers[0]['path'] != '4444J99/github-engineering-standards/.github/workflows/warning-pilot.yml@' + wrappers[0]['sha']:
+          if wrappers[0]['path'] != '4444J99/guide-github-standard/.github/workflows/warning-pilot.yml@' + wrappers[0]['sha']:
               raise ValueError('Wrapper must be called at an immutable full SHA')
           snapshot = {'repository_id': plan['repository_id'], 'revision': revision,
                       'observations': {'files': {'status': 'OK', 'complete': complete, 'data': files}}}
@@ -199,7 +199,7 @@ jobs:
                       'revision': revision, 'source_repository': os.environ['SOURCE_REPOSITORY'],
                       'source_repository_id': int(os.environ['SOURCE_REPOSITORY_ID']),
                       'wrapper': wrappers[0], 'dependency_sha256': 'ba1cc08a7ccde2d2ec775841541641e4548226580ab850948cbfda66a1befcdc',
-                      'toolkit_repository': '4444J99/github-engineering-standards', 'toolkit_commit': 'a5cdf48e9f255cb407a1ae69be62397f1151847d',
+                      'toolkit_repository': '4444J99/guide-github-standard', 'toolkit_commit': 'a5cdf48e9f255cb407a1ae69be62397f1151847d',
                       'run_id': os.environ['GITHUB_RUN_ID'], 'run_attempt': os.environ['GITHUB_RUN_ATTEMPT'],
                       'workflow_files_observed': len(files), 'workflow_inventory_complete': complete,
                       'invocation_seconds': round(time.monotonic() - started, 6),
